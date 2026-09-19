@@ -2,8 +2,10 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>TAMA GAME — Protótipo 0.19 — Sobrevivência</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TAMA GAME — 0.19.1 — Mobile PWA</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}body{display:grid;place-items:center;font-family:Arial,sans-serif}#stage{position:relative;width:min(100vw,calc(100vh*16/9));aspect-ratio:16/9;overflow:hidden;background:#000}#scene,#darkness,#hotspots,#sceneFade{position:absolute;inset:0;width:100%;height:100%}#scene{object-fit:fill;pointer-events:none}#darkness{pointer-events:none}#hotspots{overflow:visible}#hotspots>svg{width:100%;height:100%;display:block;overflow:visible}#sceneFade{z-index:95;background:#000;opacity:0;pointer-events:none;transition:opacity .18s ease}#sceneFade.on{opacity:1}
 #hotspots .hotspot{fill:rgba(0,0,0,.001)!important;stroke:transparent!important;stroke-width:2px!important;pointer-events:all;cursor:pointer;transition:stroke .08s linear,filter .08s linear,fill .08s linear;vector-effect:non-scaling-stroke}#hotspots .hotspot.found{fill:rgba(0,190,255,.10)!important;stroke:#27c8ff!important;filter:drop-shadow(0 0 2px rgba(39,200,255,.95)) drop-shadow(0 0 5px rgba(39,200,255,.55))}#hotspots .hotspot.clicked{fill:rgba(122,255,154,.12)!important;stroke:#7aff9a!important;filter:drop-shadow(0 0 2px rgba(122,255,154,.95)) drop-shadow(0 0 6px rgba(122,255,154,.55))}#hotspots .hotspot.searched{fill:rgba(130,138,145,.09)!important;stroke:rgba(165,173,180,.70)!important;filter:drop-shadow(0 0 2px rgba(170,178,185,.45)) drop-shadow(0 0 5px rgba(170,178,185,.22))}#hotspots .hotspot.searched.found{fill:rgba(130,138,145,.12)!important;stroke:rgba(180,187,193,.78)!important}#hotspots .hotspot.searched-has-items{fill:rgba(150,158,165,.15)!important;stroke:rgba(200,207,213,.86)!important;filter:drop-shadow(0 0 2px rgba(205,212,218,.55)) drop-shadow(0 0 6px rgba(205,212,218,.27))}#hotspots .hotspot.searched-empty{fill:rgba(95,100,105,.06)!important;stroke:rgba(125,132,138,.45)!important;filter:none}#hotspots .ignore-frame{fill:none!important;stroke:none!important;pointer-events:none!important}#hotspots .str0,#hotspots .str1{stroke:inherit}#hotspots .fil0{fill:inherit}
@@ -432,8 +434,208 @@
   #worldClock{font-size:10px}
 }
 
+
+/* === TAMA 0.19.1 — PWA / IPHONE LANDSCAPE === */
+html,body{
+  width:100dvw;height:100dvh;min-width:100dvw;min-height:100dvh;
+  overflow:hidden;background:#000
+}
+body{
+  position:fixed;inset:0;display:grid;place-items:center;
+  padding:0;
+}
+#ambientBackdrop{
+  position:fixed;inset:-28px;z-index:0;pointer-events:none;
+  background-size:cover;background-position:center;
+  filter:blur(22px) brightness(.16) saturate(.65);
+  transform:scale(1.06);
+  opacity:.72
+}
+#stage{
+  z-index:1;
+  width:min(100dvw,calc(100dvh * 16 / 9));
+  height:min(100dvh,calc(100dvw * 9 / 16));
+  aspect-ratio:auto;
+  overflow:visible;
+}
+#scene,#darkness,#hotspots,#sceneFade{
+  overflow:hidden;
+}
+
+/* Modal sizes must follow the GAME AREA, not full viewport vw/vh */
+#inventoryPanel{
+  width:min(1180px,94%);
+  min-height:min(610px,84%);
+}
+#batteryPanel{max-height:72%}
+
+/* iPhone/phone landscape */
+@media (orientation:landscape) and (max-height:500px){
+  #survivalHUD{
+    top:max(6px,env(safe-area-inset-top));
+    left:7px;
+    width:122px;
+    padding:5px 6px 6px;
+    border-radius:8px;
+  }
+  #worldClock{
+    font-size:8px;
+    margin-bottom:3px;
+    letter-spacing:.1px;
+  }
+  .survivalRow{
+    grid-template-columns:14px 1fr 20px;
+    gap:3px;
+    margin-top:3px;
+  }
+  .survivalIcon{font-size:11px}
+  .survivalTrack{height:4px}
+  .survivalValue{font-size:7px}
+
+  #lightControls{
+    top:max(6px,env(safe-area-inset-top));
+    right:7px;
+    gap:4px;
+  }
+  #lightActionBtn{
+    min-width:39px;height:29px;padding:0 7px;
+    border-radius:7px;font-size:8px;
+  }
+  #batteryHUD{
+    padding:4px 6px;border-radius:8px;
+  }
+  #batteryBolt{font-size:13px}
+  #batteryTrack{width:66px;height:5px}
+
+  #backpackHUD{
+    top:42px;right:7px;
+    width:32px;height:32px;border-radius:8px;
+    font-size:18px;
+  }
+
+  #batteryOverlay{
+    position:fixed;inset:0;
+    padding:
+      max(6px,env(safe-area-inset-top))
+      max(8px,env(safe-area-inset-right))
+      max(8px,env(safe-area-inset-bottom))
+      max(8px,env(safe-area-inset-left));
+    align-items:center;
+  }
+  #batteryPanel{
+    width:min(340px,72dvw);
+    max-height:92dvh;
+    padding:9px;
+    border-radius:11px;
+  }
+  #batteryPanelTitle{font-size:14px;margin-bottom:7px}
+  #lightSourceCard{padding:8px}
+  #activeSourceIcon{width:35px;height:35px;font-size:25px}
+  #activeSourceName{font-size:13px}
+  #activeSourceCharge{font-size:9px}
+  #changeSourceBtn{padding:6px 7px;font-size:9px}
+  .batteryEmoji{font-size:27px}
+  .batteryName{font-size:12px}
+  .batteryCharge{font-size:9px}
+  #batterySpareTitle{margin:9px 0 5px;font-size:9px}
+  .spareBattery{padding:7px}
+  .installBatteryBtn,#removeBatteryBtn{padding:6px 7px;font-size:9px}
+  #batteryTestNote{font-size:8px}
+
+  #inventoryOverlay{
+    position:fixed;inset:0;
+    width:100dvw;height:100dvh;
+    padding:
+      max(5px,env(safe-area-inset-top))
+      max(7px,env(safe-area-inset-right))
+      max(7px,env(safe-area-inset-bottom))
+      max(7px,env(safe-area-inset-left));
+  }
+  #inventoryPanel,
+  #inventoryPanel.backpackOnly{
+    width:100%;
+    height:100%;
+    min-height:0;
+    max-height:none;
+    gap:6px;
+    padding:6px;
+    border-radius:11px;
+  }
+  #inventoryPanel{
+    grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr) minmax(0,.95fr);
+  }
+  #inventoryPanel.backpackOnly{
+    grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+  }
+  .invSection{
+    padding:6px;
+    border-radius:9px;
+    overflow:auto;
+  }
+  .sectionHead{gap:5px;margin-bottom:5px}
+  .sectionTitle{font-size:11px}
+  .sectionSubtitle{font-size:7px}
+  #sortInventoryBtn{
+    padding:5px 6px;border-radius:6px;font-size:7px;
+  }
+  #containerGridUnified,#inventoryGrid{gap:4px}
+  .invSlot{
+    min-height:43px;
+    border-radius:7px;
+  }
+  .slotCenterUnified{font-size:23px}
+  .slotQtyUnified,.slotCharge,.slotLiquid{
+    left:4px;bottom:3px;
+    padding:2px 4px;font-size:7px;
+  }
+  .slotQtyUnified{left:auto;right:4px}
+
+  #detailPreview{
+    min-height:82px;border-radius:8px;
+  }
+  #detailPreviewEmoji{font-size:48px}
+  .previewDeadX{font-size:28px}
+  #detailName{
+    font-size:15px;margin-top:7px;
+  }
+  #detailDesc{
+    margin-top:5px;font-size:9px;
+    line-height:1.15;min-height:30px;
+  }
+  #detailMeta{margin-top:5px}
+  .tag{font-size:7px;padding:3px 5px}
+  #detailOrigin{margin-top:4px;font-size:7px}
+  #detailActions{gap:5px;margin-top:7px}
+  .detailBtn{
+    padding:6px 8px;border-radius:7px;font-size:8px;
+  }
+  #destroyHint{margin-top:4px;font-size:7px;min-height:8px}
+
+  #lootFocus{
+    width:min(270px,45dvw);
+    min-width:180px;
+    padding:5px 10px 9px;
+  }
+  .lootEmojiWrap{
+    min-width:92px;min-height:92px;
+    margin-bottom:6px;
+  }
+  #lootEmoji{font-size:76px}
+  #lootName{font-size:15px;margin-bottom:5px}
+  #lootDesc{max-width:220px;font-size:9px}
+  #lootQty{font-size:12px;min-width:28px;padding:2px 6px 3px}
+
+  #actionPrompt{font-size:10px;transform:translate(-50%,20px)}
+  #emptyResult{font-size:14px}
+
+  #survivalFlash{
+    top:12%;padding:5px 8px;font-size:9px;
+  }
+}
+
 </style>
 </head><body>
+<div id="ambientBackdrop"></div>
 <div id="stage">
   <img id="scene" alt="">
   <canvas id="darkness" width="1920" height="1080"></canvas>
@@ -549,8 +751,9 @@
 
 
 
+
 (() => {
-const stage=document.getElementById('stage'),sceneEl=document.getElementById('scene'),canvas=document.getElementById('darkness'),ctx=canvas.getContext('2d'),hotspotsHost=document.getElementById('hotspots'),sceneFade=document.getElementById('sceneFade');
+const ambientBackdrop=document.getElementById('ambientBackdrop'),stage=document.getElementById('stage'),sceneEl=document.getElementById('scene'),canvas=document.getElementById('darkness'),ctx=canvas.getContext('2d'),hotspotsHost=document.getElementById('hotspots'),sceneFade=document.getElementById('sceneFade');
 const prompt=document.getElementById('actionPrompt'),actionText=document.getElementById('actionText'),emptyResult=document.getElementById('emptyResult');
 const worldClock=document.getElementById('worldClock'),healthFill=document.getElementById('healthFill'),hungerFill=document.getElementById('hungerFill'),thirstFill=document.getElementById('thirstFill'),fatigueFill=document.getElementById('fatigueFill'),healthValue=document.getElementById('healthValue'),hungerValue=document.getElementById('hungerValue'),thirstValue=document.getElementById('thirstValue'),fatigueValue=document.getElementById('fatigueValue'),survivalFlash=document.getElementById('survivalFlash');
 const batteryHUD=document.getElementById('batteryHUD'),batteryFill=document.getElementById('batteryFill'),batteryBolt=document.getElementById('batteryBolt');
@@ -1495,7 +1698,7 @@ function batteryTick(){
   redraw();
 }
 
-function loadScene(name){currentScene=name;containerState=sceneStates[name]||(sceneStates[name]={});sceneEl.src=SCENES[name].src;hotspotsHost.innerHTML=SCENES[name].svg;hovered=null;holding=null;prepSvg();redraw()}
+function loadScene(name){currentScene=name;containerState=sceneStates[name]||(sceneStates[name]={});sceneEl.src=SCENES[name].src;ambientBackdrop.style.backgroundImage=`url("${SCENES[name].src}")`;hotspotsHost.innerHTML=SCENES[name].svg;hovered=null;holding=null;prepSvg();redraw()}
 function changeScene(name){if(!name||!SCENES[name])return;cancelSearch();hidePrompt();advanceGameMinutes(2);sceneFade.classList.add('on');setTimeout(()=>{loadScene(name);saveAfterAction();setTimeout(()=>sceneFade.classList.remove('on'),60)},190)}
 mask.onload=()=>{maskReady=true;redraw()};stage.addEventListener('pointermove',moveLight,{passive:true});stage.addEventListener('pointerdown',e=>{if(!lootReveal.classList.contains('open')&&!inventoryOverlay.classList.contains('open')&&!batteryOverlay.classList.contains('open'))moveLight(e)},{passive:true});window.addEventListener('pointerup',cancelSearch,{passive:true});window.addEventListener('pointercancel',cancelSearch,{passive:true});window.addEventListener('blur',cancelSearch);
 lootReveal.addEventListener('pointermove',e=>{const over=!!e.target.closest('#lootFocus');setPrompt(over?'Pegar':'Deixar',over?'normal':'leave',e.clientX,e.clientY)});lootReveal.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(e.target.closest('#lootFocus'))takeReveal();else leaveReveal()});lootReveal.addEventListener('contextmenu',e=>e.preventDefault());
@@ -1560,6 +1763,7 @@ window.addEventListener('beforeunload',saveLocalGame);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveLocalGame()});
 loadScene(SCENES[currentScene]?currentScene:'kitchen');redraw();
 })();
+
 
 
 
