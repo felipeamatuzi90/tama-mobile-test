@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TAMA GAME — 0.19.6 — Inventário / Interface</title>
+<title>TAMA GAME — 0.19.7 — Inventário / Ações</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}body{display:grid;place-items:center;font-family:Arial,sans-serif}#stage{position:relative;width:min(100vw,calc(100vh*16/9));aspect-ratio:16/9;overflow:hidden;background:#000}#scene,#darkness,#hotspots,#sceneFade{position:absolute;inset:0;width:100%;height:100%}#scene{object-fit:fill;pointer-events:none}#darkness{pointer-events:none}#hotspots{overflow:visible}#hotspots>svg{width:100%;height:100%;display:block;overflow:visible}#sceneFade{z-index:95;background:#000;opacity:0;pointer-events:none;transition:opacity .18s ease}#sceneFade.on{opacity:1}
 #hotspots .hotspot{fill:rgba(0,0,0,.001)!important;stroke:transparent!important;stroke-width:2px!important;pointer-events:all;cursor:pointer;transition:stroke .08s linear,filter .08s linear,fill .08s linear;vector-effect:non-scaling-stroke}#hotspots .hotspot.found{fill:rgba(0,190,255,.10)!important;stroke:#27c8ff!important;filter:drop-shadow(0 0 2px rgba(39,200,255,.95)) drop-shadow(0 0 5px rgba(39,200,255,.55))}#hotspots .hotspot.clicked{fill:rgba(122,255,154,.12)!important;stroke:#7aff9a!important;filter:drop-shadow(0 0 2px rgba(122,255,154,.95)) drop-shadow(0 0 6px rgba(122,255,154,.55))}#hotspots .hotspot.searched{fill:rgba(130,138,145,.09)!important;stroke:rgba(165,173,180,.70)!important;filter:drop-shadow(0 0 2px rgba(170,178,185,.45)) drop-shadow(0 0 5px rgba(170,178,185,.22))}#hotspots .hotspot.searched.found{fill:rgba(130,138,145,.12)!important;stroke:rgba(180,187,193,.78)!important}#hotspots .hotspot.searched-has-items{fill:rgba(150,158,165,.15)!important;stroke:rgba(200,207,213,.86)!important;filter:drop-shadow(0 0 2px rgba(205,212,218,.55)) drop-shadow(0 0 6px rgba(205,212,218,.27))}#hotspots .hotspot.searched-empty{fill:rgba(95,100,105,.06)!important;stroke:rgba(125,132,138,.45)!important;filter:none}#hotspots .ignore-frame{fill:none!important;stroke:none!important;pointer-events:none!important}#hotspots .str0,#hotspots .str1{stroke:inherit}#hotspots .fil0{fill:inherit}
@@ -917,6 +917,34 @@ body{
   #doorFocus{width:min(420px,72dvw)!important;min-width:260px!important;padding:8px 12px 12px!important}.doorEmojiWrap{min-width:110px!important;min-height:110px!important;margin-bottom:8px!important}#doorEmoji{font-size:88px!important}#doorName{font-size:24px!important;margin-bottom:7px!important}#doorDesc{font-size:17px!important;max-width:390px!important;line-height:1.18!important}
 }
 
+
+/* === TAMA 0.19.7 — AÇÕES / DUPLO TOQUE / GRID === */
+#inventoryGrid,#containerGridUnified{grid-auto-flow:row!important;grid-auto-rows:max-content!important;align-content:start!important;align-items:start!important}
+.invSlot{box-sizing:border-box}
+#detailActions{display:flex;flex-direction:column;gap:8px}
+.detailActionRow{display:flex;align-items:center;gap:8px;width:100%}
+.detailActionRow .detailBtn.primary{flex:1;min-width:0}
+.detailBtn.destroyCompact{flex:0 0 auto;min-width:84px;padding-left:10px;padding-right:10px;background:rgba(143,42,48,.16);box-shadow:inset 0 0 0 1px rgba(220,73,73,.32);color:#ffdfe1}
+.detailBtn.mainUseAction{width:100%;min-height:48px;font-size:14px;background:rgba(39,200,255,.17);box-shadow:inset 0 0 0 1px rgba(39,200,255,.40);color:#effbff}
+.detailBtn.mainUseAction.use{background:rgba(91,147,69,.19);box-shadow:inset 0 0 0 1px rgba(123,207,91,.38)}
+.detailBtn.takeAction{width:100%;min-height:50px;font-size:14px}
+#inventoryPanel.backpackOnly{grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr) minmax(0,.95fr)!important}
+#inventoryPanel.backpackOnly #backpackSection{grid-column:1 / span 2}
+#inventoryPanel.backpackOnly #detailSection{grid-column:3}
+#inventoryPanel.backpackOnly #inventoryGrid{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media (orientation:landscape) and (max-height:500px){
+  #inventoryGrid,#containerGridUnified{grid-auto-flow:row!important;grid-auto-rows:max-content!important;align-content:start!important;align-items:start!important}
+  #inventoryPanel:not(.backpackOnly) #inventoryGrid,#containerGridUnified{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+  #inventoryPanel.backpackOnly{grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr) minmax(0,.95fr)!important}
+  #inventoryPanel.backpackOnly #backpackSection{grid-column:1 / span 2!important}
+  #inventoryPanel.backpackOnly #detailSection{grid-column:3!important}
+  #inventoryPanel.backpackOnly #inventoryGrid{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:8px!important}
+  .invSlot{width:100%!important;aspect-ratio:1/1!important;min-height:0!important;height:auto!important;align-self:start!important}
+  .detailBtn.takeAction{min-height:46px;font-size:12px}
+  .detailBtn.mainUseAction{min-height:44px;font-size:12px}
+  .detailBtn.destroyCompact{min-width:74px;font-size:9px;padding:7px 8px}
+}
+
 </style>
 </head><body>
 <div id="ambientBackdrop"></div>
@@ -1077,6 +1105,8 @@ let px=W*.5,py=H*.5,lightTargetX=W*.5,lightTargetY=H*.5,lightMoveRaf=0,maskReady
 let uiMode='backpack',selectedSource=null,selectedKey=null,inventorySortMode=0,destroyHolding=false,destroyTimer=0,destroyDotsTimer=0,destroyKey=null;
 let consumeHolding=false,consumeTimer=0,consumeDotsTimer=0,consumeKey=null,consumePointerId=null,pendingDoor=null;
 let selectedWorldId=null,worldPressCandidate=null,worldSearchTimer=0,worldSearchDotsTimer=0,worldSearchBusy=false,transferModeSourceKey=null,transferBusy=false,transferTimer=0,transferDotsTimer=0,statFxQueue=[],statFxRunning=false;
+let lastInventoryTap={source:null,key:null,time:0},consumeAutoAction=false;
+const DOUBLE_TAP_MS=380;
 const CONSUME_HOLD_MS=1300;
 const LOCAL_SAVE_KEY='tama_game_local_save_v1';let lastLocalBatterySave=0,lastSurvivalTick=performance.now(),lastSurvivalSave=0;
 const survival={health:100,hunger:72,thirst:60,fatigue:78};
@@ -1319,11 +1349,11 @@ function worldActionLabel(el){if(!el)return'Interagir';const d=doorFor(el);if(d)
 function showPromptFor(el,e){hovered=el;setPrompt(worldActionLabel(el),containerState[el.id]?.searched?'searched':'normal',e.clientX,e.clientY)}
 function positionPromptOverElement(el){if(!el)return;const sr=stage.getBoundingClientRect(),r=el.getBoundingClientRect();const x=(r.left+r.right)/2-sr.left,y=Math.max(18,r.top-sr.top-7);prompt.style.left=`${Math.max(65,Math.min(sr.width-65,x))}px`;prompt.style.top=`${y}px`;prompt.style.transform='translate(-50%,-100%)'}
 function selectedWorldElement(){return selectedWorldId?document.getElementById(selectedWorldId):null}
-function updateInteractButton(){const el=selectedWorldElement();let label='Interagir',active=false;if(el){label=worldActionLabel(el);active=true}else{const src=currentLightSource();if(src.actionMode==='ignite'){label=lightOn?'Apagar':'Acender';active=true}else if(src.actionMode==='crank'){label='Girar manivela';active=true}}interactButton.textContent=worldSearchBusy?'Vasculhando...':label;interactButton.classList.toggle('active',active&&!worldSearchBusy);interactButton.classList.toggle('busy',worldSearchBusy);interactButton.disabled=worldSearchBusy||transferBusy}
+function updateInteractButton(){if(lootReveal.classList.contains('open')&&currentRevealItem){interactButton.textContent='Pegar';interactButton.classList.add('active');interactButton.classList.remove('busy');interactButton.disabled=false;return}const el=selectedWorldElement();let label='Interagir',active=false;if(el){label=worldActionLabel(el);active=true}else{const src=currentLightSource();if(src.actionMode==='ignite'){label=lightOn?'Apagar':'Acender';active=true}else if(src.actionMode==='crank'){label='Girar manivela';active=true}}interactButton.textContent=worldSearchBusy?'Vasculhando...':label;interactButton.classList.toggle('active',active&&!worldSearchBusy);interactButton.classList.toggle('busy',worldSearchBusy);interactButton.disabled=worldSearchBusy||transferBusy}
 function clearWorldSelection(){const old=selectedWorldElement();if(old)old.classList.remove('world-selected');selectedWorldId=null;updateInteractButton();if(!worldSearchBusy)hidePrompt()}
 function selectWorldElement(el){if(!el||worldSearchBusy)return;const old=selectedWorldElement();if(old&&old!==el)old.classList.remove('world-selected');selectedWorldId=el.id;el.classList.add('world-selected');updateInteractButton()}
 function startWorldSearch(el){if(!el||containerState[el.id]?.searched||worldSearchBusy)return;worldSearchBusy=true;holding=el;el.classList.add('clicked');updateInteractButton();let dots=1;const paint=()=>{actionText.textContent='Vasculhando'+'.'.repeat(dots);dots=dots%3+1;positionPromptOverElement(el);prompt.classList.add('visible')};paint();worldSearchDotsTimer=setInterval(paint,320);worldSearchTimer=setTimeout(()=>{worldSearchTimer=0;completeSearch(el)},SEARCH_TIME)}
-function performModularInteraction(){if(worldSearchBusy||transferBusy)return;const el=selectedWorldElement();if(el){const d=doorFor(el);if(d){showDoorConfirm(d);return}const st=containerState[el.id];if(st?.searched){window.TAMA_UI.openContainer(el.id);return}startWorldSearch(el);return}const src=currentLightSource();if(src.actionMode==='ignite'||src.actionMode==='crank')performLightAction()}
+function performModularInteraction(){if(lootReveal.classList.contains('open')&&currentRevealItem){takeReveal();return}if(worldSearchBusy||transferBusy)return;const el=selectedWorldElement();if(el){const d=doorFor(el);if(d){showDoorConfirm(d);return}const st=containerState[el.id];if(st?.searched){window.TAMA_UI.openContainer(el.id);return}startWorldSearch(el);return}const src=currentLightSource();if(src.actionMode==='ignite'||src.actionMode==='crank')performLightAction()}
 function stopDots(){if(dotsTimer)clearInterval(dotsTimer);dotsTimer=0;dots=0}function startDots(){stopDots();const f=()=>{dots=dots%3+1;actionText.textContent='Vasculhando'+'.'.repeat(dots)};f();dotsTimer=setInterval(f,320)}
 function cancelSearch(){if(!worldSearchBusy)return;if(worldSearchTimer)clearTimeout(worldSearchTimer);if(worldSearchDotsTimer)clearInterval(worldSearchDotsTimer);worldSearchTimer=0;worldSearchDotsTimer=0;worldSearchBusy=false;if(holding)holding.classList.remove('clicked');holding=null;stopDots();hidePrompt();updateInteractButton()}
 function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}function pick(a){return a[Math.floor(Math.random()*a.length)]}function makeUid(){return 'b_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
@@ -1354,7 +1384,7 @@ function emptyFeedback(id){hidePrompt();emptyResult.classList.add('visible');set
 function completeSearch(el){if(worldSearchTimer)clearTimeout(worldSearchTimer);if(worldSearchDotsTimer)clearInterval(worldSearchDotsTimer);worldSearchTimer=0;worldSearchDotsTimer=0;worldSearchBusy=false;el.classList.remove('clicked');holding=null;stopDots();advanceGameMinutes(5);armContainerOpenGuard(el.id);const loot=generate(el.id);containerState[el.id]={searched:true,remaining:[],generated:loot.map(x=>({...x}))};updateState(el.id);selectWorldElement(el);updateInteractButton();hidePrompt();if(!loot.length){saveAfterAction();return emptyFeedback(el.id)}revealContainerId=el.id;revealQueue=loot.map(x=>({...x}));showNext()}
 function tick(now){if(!holding)return;if(now-holdStart>=SEARCH_TIME){completeSearch(holding);raf=0;return}raf=requestAnimationFrame(tick)}function beginSearch(el,e){holding=el;holdStart=performance.now();el.classList.add('clicked');startDots();positionPrompt(e.clientX,e.clientY);prompt.classList.add('visible');raf=requestAnimationFrame(tick)}
 function renderLoot(item){const d=ITEMS[item.id];lootEmoji.textContent=d.emoji;lootName.textContent=d.name;lootDesc.textContent=itemDescription(item);lootMeta.innerHTML=tagHTML(item);lootQty.textContent=item.qty>1?`x${item.qty}`:'';lootQty.classList.toggle('visible',item.qty>1)}
-function showNext(){hidePrompt();if(!revealQueue.length){lootReveal.classList.remove('open');currentRevealItem=null;updateState(revealContainerId);return}currentRevealItem=revealQueue.shift();renderLoot(currentRevealItem);lootReveal.classList.add('open')}
+function showNext(){hidePrompt();if(!revealQueue.length){lootReveal.classList.remove('open');currentRevealItem=null;updateState(revealContainerId);updateInteractButton();return}currentRevealItem=revealQueue.shift();renderLoot(currentRevealItem);lootReveal.classList.add('open');updateInteractButton()}
 function storeInventoryItem(i){const item={...i};if(item.id==='battery'){const charge=Math.max(0,Math.min(100,item.charge??0));item.charge=charge;if(charge<=0){const key='battery_dead',incomingQty=Math.max(1,item.qty??1);if(inventory[key])inventory[key].qty=(inventory[key].qty??1)+incomingQty;else inventory[key]={id:'battery',uid:key,qty:incomingQty,category:'energy',charge:0};return key}const uid=item.uid||makeUid();inventory[uid]={...item,uid,qty:1};return uid}if(item.id==='water_bottle'){const fill=Math.max(0,Math.min(100,item.fill??0));if(fill<=0){const key='water_empty',incomingQty=Math.max(1,item.qty??1);if(inventory[key])inventory[key].qty=(inventory[key].qty??1)+incomingQty;else inventory[key]={id:'water_bottle',uid:key,qty:incomingQty,category:'container',condition:item.condition||'good',fill:0,fluidType:null};return key}const uid=item.uid||makeItemUid('water');inventory[uid]={...item,uid,qty:1,fill,fluidType:item.fluidType||'clean_water'};return uid}const k=`${item.id}__${item.condition}`;if(!inventory[k])inventory[k]={...item};else inventory[k].qty=(inventory[k].qty??1)+(item.qty??1);return k}
 function normalizeEmptyCups(){
   let emptyCount=0,condition='good';
@@ -1679,12 +1709,12 @@ function cancelConsumeHold(){
   if(consumeDotsTimer)clearInterval(consumeDotsTimer);
   consumeTimer=0;consumeDotsTimer=0;
   paintConsumeHold(false);
-  consumeHolding=false;consumeKey=null;consumePointerId=null;
+  consumeHolding=false;consumeKey=null;consumePointerId=null;consumeAutoAction=false;
 }
 function finishConsumeHold(){
-  if(!consumeHolding||!consumeKey||!inventory[consumeKey])return cancelConsumeHold();
+  if(!consumeHolding||!consumeKey||!inventory[consumeKey]){consumeAutoAction=false;return cancelConsumeHold()}
   const key=consumeKey,item=inventory[key];
-  cancelConsumeHold();
+  consumeAutoAction=false;cancelConsumeHold();
   if(item.id==='water_bottle')drinkBottle(key);
   else consumeStackItem(key);
 }
@@ -1702,6 +1732,34 @@ function startConsumeHold(e){
   consumeTimer=setTimeout(finishConsumeHold,CONSUME_HOLD_MS);
 }
 
+
+function primaryItemActionLabel(item){
+  if(!item||!isConsumableItem(item))return null;
+  if(item.id==='water_bottle'||item.category==='food')return'Consumir';
+  return'Usar';
+}
+function beginAutoConsumeAction(){
+  const item=selectedItem();
+  if(selectedSource!=='inventory'||!selectedKey||!isConsumableItem(item)||consumeHolding)return;
+  cancelConsumeHold();
+  consumeAutoAction=true;consumeHolding=true;consumeKey=selectedKey;consumePointerId=null;
+  let dots=1;const base=consumingTextFor(item);
+  const paint=()=>{paintConsumeHold(true,base+'.'.repeat(dots));dots=dots%3+1};
+  paint();consumeDotsTimer=setInterval(paint,300);
+  consumeTimer=setTimeout(()=>{consumeAutoAction=false;finishConsumeHold()},CONSUME_HOLD_MS);
+}
+function resetInventoryTap(){lastInventoryTap={source:null,key:null,time:0}}
+function handleInventorySlotTap(source,key){
+  const now=performance.now();
+  const same=lastInventoryTap.source===source&&String(lastInventoryTap.key)===String(key)&&(now-lastInventoryTap.time)<=DOUBLE_TAP_MS;
+  lastInventoryTap={source,key:String(key),time:now};
+  selectUnifiedItem(source,String(key));
+  if(!same||uiMode!=='container'||!openContainerId||transferModeSourceKey)return;
+  resetInventoryTap();
+  if(source==='inventory')transferInventoryToContainer(String(key));
+  else transferContainerToInventory(Number(key));
+}
+
 function renderUnifiedGrids(){
   const entries=sortedInventoryEntries();updateInventoryTitles();inventoryGrid.innerHTML='';
   const transferTargets=transferModeSourceKey?new Set(compatibleBottleEntries(transferModeSourceKey).map(([k])=>k)):new Set();
@@ -1711,8 +1769,7 @@ function renderUnifiedGrids(){
     if(!entry){slot.classList.add('empty');inventoryGrid.appendChild(slot);continue}
     const [key,it]=entry;slot.dataset.source='inventory';slot.dataset.key=key;slot.innerHTML=itemIconHTML(it);const tone=slotToneClass(it);if(tone)slot.classList.add(tone);
     if(transferModeSourceKey===key)slot.classList.add('transfer-source');if(transferTargets.has(key))slot.classList.add('transfer-target');
-    slot.onclick=e=>{e.stopPropagation();if(transferModeSourceKey){if(transferTargets.has(key))startLiquidTransfer(transferModeSourceKey,key);else if(key===transferModeSourceKey)cancelLiquidTransferMode();return}selectUnifiedItem('inventory',key)};
-    slot.ondblclick=e=>{e.preventDefault();e.stopPropagation();if(transferModeSourceKey)return;selectUnifiedItem('inventory',key);if(uiMode==='container'&&openContainerId)transferInventoryToContainer(key)};
+    slot.onclick=e=>{e.preventDefault();e.stopPropagation();if(transferModeSourceKey){if(transferTargets.has(key))startLiquidTransfer(transferModeSourceKey,key);else if(key===transferModeSourceKey)cancelLiquidTransferMode();return}handleInventorySlotTap('inventory',key)};
     inventoryGrid.appendChild(slot);
   }
   containerGridUnified.innerHTML='';
@@ -1722,8 +1779,7 @@ function renderUnifiedGrids(){
       const slot=document.createElement('div');slot.className='invSlot';const it=items[i];
       if(!it){slot.classList.add('empty');containerGridUnified.appendChild(slot);continue}
       slot.dataset.source='container';slot.dataset.key=String(i);slot.innerHTML=itemIconHTML(it);const tone=slotToneClass(it);if(tone)slot.classList.add(tone);
-      slot.onclick=e=>{e.stopPropagation();if(!transferModeSourceKey)selectUnifiedItem('container',String(i))};
-      slot.ondblclick=e=>{e.preventDefault();e.stopPropagation();if(transferModeSourceKey)return;selectUnifiedItem('container',String(i));transferContainerToInventory(i)};
+      slot.onclick=e=>{e.preventDefault();e.stopPropagation();if(!transferModeSourceKey)handleInventorySlotTap('container',String(i))};
       containerGridUnified.appendChild(slot);
     }
     containerSectionSubtitle.textContent='';
@@ -1735,16 +1791,28 @@ function renderDetail(){
   const item=selectedItem();cancelConsumeHold();detailPreview.classList.remove('consume-ready');liquidTransferTargets.classList.remove('open');liquidTransferTargets.innerHTML='';detailOrigin.textContent='';destroyHint.textContent='';
   if(!item){detailPreviewEmoji.innerHTML='🎒';detailName.textContent='';detailDesc.textContent='';detailMeta.innerHTML='';detailActions.innerHTML='';return}
   const d=ITEMS[item.id],dead=item.id==='battery'&&(item.charge??0)<=0?'<div class="previewDeadX">✖</div>':'';detailPreviewEmoji.innerHTML=`${d.emoji}${dead}`;detailName.textContent=d.name;detailDesc.textContent=itemDescription(item);detailMeta.innerHTML=tagHTML(item);
-  const consumable=selectedSource==='inventory'&&isConsumableItem(item);detailPreview.classList.toggle('consume-ready',consumable);let html='';
-  if(selectedSource==='container')html+=`<button id="transferActionBtn" class="detailBtn primary">Pegar</button>`;else if(uiMode==='container'&&openContainerId)html+=`<button id="transferActionBtn" class="detailBtn primary">Guardar</button>`;
-  if(selectedSource==='inventory'){if(item.id==='water_bottle'&&(item.fill??0)>0)html+=`<button id="liquidTransferBtn" class="detailBtn primary">Transferir líquido</button>`;html+=`<button id="destroyActionBtn" class="detailBtn danger">Destruir</button>`}
+  const consumable=selectedSource==='inventory'&&isConsumableItem(item);detailPreview.classList.toggle('consume-ready',consumable);
+  let html='';
+  if(selectedSource==='container'){
+    html=`<button id="transferActionBtn" class="detailBtn primary takeAction">Pegar</button>`;
+  }else if(selectedSource==='inventory'){
+    const top=[];
+    if(uiMode==='container'&&openContainerId)top.push(`<button id="transferActionBtn" class="detailBtn primary">Guardar</button>`);
+    else if(item.id==='water_bottle'&&(item.fill??0)>0)top.push(`<button id="liquidTransferBtn" class="detailBtn primary">Transferir líquido</button>`);
+    top.push(`<button id="destroyActionBtn" class="detailBtn danger destroyCompact">Destruir</button>`);
+    html+=`<div class="detailActionRow">${top.join('')}</div>`;
+    if(uiMode==='container'&&openContainerId&&item.id==='water_bottle'&&(item.fill??0)>0)html+=`<button id="liquidTransferBtn" class="detailBtn primary">Transferir líquido</button>`;
+    const actionLabel=primaryItemActionLabel(item);
+    if(actionLabel)html+=`<button id="mainItemActionBtn" class="detailBtn mainUseAction ${actionLabel==='Usar'?'use':''}">${actionLabel}</button>`;
+  }
   detailActions.innerHTML=html;
-  const transferBtn=document.getElementById('transferActionBtn');if(transferBtn)transferBtn.onclick=e=>{e.stopPropagation();selectedSource==='container'?transferContainerToInventory(Number(selectedKey)):transferInventoryToContainer(selectedKey)};
-  const liquidBtn=document.getElementById('liquidTransferBtn');if(liquidBtn)liquidBtn.onclick=e=>{e.stopPropagation();showLiquidTargets(selectedKey)};
+  const transferBtn=document.getElementById('transferActionBtn');if(transferBtn)transferBtn.onclick=e=>{e.preventDefault();e.stopPropagation();selectedSource==='container'?transferContainerToInventory(Number(selectedKey)):transferInventoryToContainer(selectedKey)};
+  const liquidBtn=document.getElementById('liquidTransferBtn');if(liquidBtn)liquidBtn.onclick=e=>{e.preventDefault();e.stopPropagation();showLiquidTargets(selectedKey)};
+  const mainBtn=document.getElementById('mainItemActionBtn');if(mainBtn)mainBtn.onclick=e=>{e.preventDefault();e.stopPropagation();beginAutoConsumeAction()};
   const destroyBtn=document.getElementById('destroyActionBtn');if(destroyBtn){destroyBtn.onpointerdown=e=>{e.preventDefault();e.stopPropagation();startDestroyHold(destroyBtn)};destroyBtn.onpointerup=e=>{e.preventDefault();e.stopPropagation();cancelDestroy()};destroyBtn.onpointerleave=e=>{if(destroyHolding)cancelDestroy()};destroyBtn.onpointercancel=e=>cancelDestroy();destroyBtn.oncontextmenu=e=>e.preventDefault()}
 }
-function openUnifiedInventory(mode='backpack',containerId=null){cancelDestroy();cancelLiquidTransferMode();uiMode=mode;openContainerId=mode==='container'?containerId:null;if(mode==='container'&&openContainerId&&!containerState[openContainerId])containerState[openContainerId]={searched:true,remaining:[]};selectedSource=null;selectedKey=null;batteryOverlay.classList.remove('open');stage.classList.remove('battery-open');inventoryPanel.classList.toggle('backpackOnly',mode!=='container');inventoryOverlay.classList.add('open');inventoryOverlay.style.display='flex';inventoryOverlay.style.pointerEvents='auto';stage.classList.add('inventory-open');updateInventoryTitles();renderUnifiedGrids();renderDetail();syncFloatingHud()}
-function closeUnifiedInventory(){cancelDestroy();cancelConsumeHold();cancelLiquidTransferMode();inventoryOverlay.classList.remove('open');inventoryOverlay.style.display='none';stage.classList.remove('inventory-open');if(openContainerId)updateState(openContainerId);openContainerId=null;selectedSource=null;selectedKey=null;uiMode='backpack';updateInventoryTitles();syncFloatingHud();saveAfterAction()}
+function openUnifiedInventory(mode='backpack',containerId=null){cancelDestroy();cancelLiquidTransferMode();resetInventoryTap();uiMode=mode;openContainerId=mode==='container'?containerId:null;if(mode==='container'&&openContainerId&&!containerState[openContainerId])containerState[openContainerId]={searched:true,remaining:[]};selectedSource=null;selectedKey=null;batteryOverlay.classList.remove('open');stage.classList.remove('battery-open');inventoryPanel.classList.toggle('backpackOnly',mode!=='container');inventoryOverlay.classList.add('open');inventoryOverlay.style.display='flex';inventoryOverlay.style.pointerEvents='auto';stage.classList.add('inventory-open');updateInventoryTitles();renderUnifiedGrids();renderDetail();syncFloatingHud()}
+function closeUnifiedInventory(){cancelDestroy();cancelConsumeHold();cancelLiquidTransferMode();resetInventoryTap();inventoryOverlay.classList.remove('open');inventoryOverlay.style.display='none';stage.classList.remove('inventory-open');if(openContainerId)updateState(openContainerId);openContainerId=null;selectedSource=null;selectedKey=null;uiMode='backpack';updateInventoryTitles();syncFloatingHud();saveAfterAction()}
 function transferContainerToInventory(index){
   if(!openContainerId)return;
   const st=containerState[openContainerId],it=st?.remaining?.[index];if(!it)return;
@@ -1994,7 +2062,7 @@ function batteryTick(){
 
 function loadScene(name){const old=selectedWorldElement();if(old)old.classList.remove('world-selected');selectedWorldId=null;currentScene=name;containerState=sceneStates[name]||(sceneStates[name]={});sceneEl.src=SCENES[name].src;ambientBackdrop.style.backgroundImage=`url("${SCENES[name].src}")`;hotspotsHost.innerHTML=SCENES[name].svg;hovered=null;holding=null;lightTargetX=px;lightTargetY=py;prepSvg();updateInteractButton();redraw()}
 function changeScene(name){if(!name||!SCENES[name])return;cancelSearch();hidePrompt();advanceGameMinutes(2);sceneFade.classList.add('on');setTimeout(()=>{loadScene(name);saveAfterAction();setTimeout(()=>sceneFade.classList.remove('on'),60)},190)}
-mask.onload=()=>{maskReady=true;redraw()};stage.addEventListener('pointermove',e=>{if(worldPressCandidate){const dx=e.clientX-worldPressCandidate.x,dy=e.clientY-worldPressCandidate.y;if(Math.hypot(dx,dy)>14)worldPressCandidate.moved=true}moveLight(e)},{passive:true});stage.addEventListener('pointerdown',e=>{if(lootReveal.classList.contains('open')||inventoryOverlay.classList.contains('open')||batteryOverlay.classList.contains('open')||doorReveal.classList.contains('open'))return;if(!e.target.closest?.('.hotspot')&&!e.target.closest?.('#interactButton'))clearWorldSelection();moveLight(e)},{passive:true});window.addEventListener('pointerup',e=>{releaseContainerOpenGuard();cancelConsumeHold();const c=worldPressCandidate;worldPressCandidate=null;if(!c||c.moved||c.left||worldSearchBusy)return;const hit=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.hotspot');if(hit&&hit.id===c.id)selectWorldElement(hit)},{passive:false});window.addEventListener('pointercancel',e=>{releaseContainerOpenGuard();cancelConsumeHold();worldPressCandidate=null},{passive:false});window.addEventListener('blur',()=>{cancelConsumeHold();worldPressCandidate=null});
+mask.onload=()=>{maskReady=true;redraw()};stage.addEventListener('pointermove',e=>{if(worldPressCandidate){const dx=e.clientX-worldPressCandidate.x,dy=e.clientY-worldPressCandidate.y;if(Math.hypot(dx,dy)>14)worldPressCandidate.moved=true}moveLight(e)},{passive:true});stage.addEventListener('pointerdown',e=>{if(lootReveal.classList.contains('open')||inventoryOverlay.classList.contains('open')||batteryOverlay.classList.contains('open')||doorReveal.classList.contains('open'))return;if(!e.target.closest?.('.hotspot')&&!e.target.closest?.('#interactButton'))clearWorldSelection();moveLight(e)},{passive:true});window.addEventListener('pointerup',e=>{releaseContainerOpenGuard();if(!consumeAutoAction)cancelConsumeHold();const c=worldPressCandidate;worldPressCandidate=null;if(!c||c.moved||c.left||worldSearchBusy)return;const hit=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.hotspot');if(hit&&hit.id===c.id)selectWorldElement(hit)},{passive:false});window.addEventListener('pointercancel',e=>{releaseContainerOpenGuard();consumeAutoAction=false;cancelConsumeHold();worldPressCandidate=null},{passive:false});window.addEventListener('blur',()=>{consumeAutoAction=false;cancelConsumeHold();worldPressCandidate=null});
 lootReveal.addEventListener('pointermove',e=>{const over=!!e.target.closest('#lootFocus');setPrompt(over?'Pegar':'Deixar',over?'normal':'leave',e.clientX,e.clientY)});lootReveal.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(e.target.closest('#lootFocus'))takeReveal();else leaveReveal()});lootReveal.addEventListener('contextmenu',e=>e.preventDefault());
 doorReveal.addEventListener('pointermove',e=>{const over=!!e.target.closest('#doorFocus');setPrompt(over?(pendingDoor?.target?'Usar porta':'Indisponível'):'Voltar',over?'normal':'leave',e.clientX,e.clientY)});
 doorReveal.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(e.target.closest('#doorFocus'))usePendingDoor();else closeDoorConfirm()});
