@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TAMA GAME — 0.19.7 — Inventário / Ações</title>
+<title>TAMA GAME — 0.19.8 — Capacidades / Interação</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}body{display:grid;place-items:center;font-family:Arial,sans-serif}#stage{position:relative;width:min(100vw,calc(100vh*16/9));aspect-ratio:16/9;overflow:hidden;background:#000}#scene,#darkness,#hotspots,#sceneFade{position:absolute;inset:0;width:100%;height:100%}#scene{object-fit:fill;pointer-events:none}#darkness{pointer-events:none}#hotspots{overflow:visible}#hotspots>svg{width:100%;height:100%;display:block;overflow:visible}#sceneFade{z-index:95;background:#000;opacity:0;pointer-events:none;transition:opacity .18s ease}#sceneFade.on{opacity:1}
 #hotspots .hotspot{fill:rgba(0,0,0,.001)!important;stroke:transparent!important;stroke-width:2px!important;pointer-events:all;cursor:pointer;transition:stroke .08s linear,filter .08s linear,fill .08s linear;vector-effect:non-scaling-stroke}#hotspots .hotspot.found{fill:rgba(0,190,255,.10)!important;stroke:#27c8ff!important;filter:drop-shadow(0 0 2px rgba(39,200,255,.95)) drop-shadow(0 0 5px rgba(39,200,255,.55))}#hotspots .hotspot.clicked{fill:rgba(122,255,154,.12)!important;stroke:#7aff9a!important;filter:drop-shadow(0 0 2px rgba(122,255,154,.95)) drop-shadow(0 0 6px rgba(122,255,154,.55))}#hotspots .hotspot.searched{fill:rgba(130,138,145,.09)!important;stroke:rgba(165,173,180,.70)!important;filter:drop-shadow(0 0 2px rgba(170,178,185,.45)) drop-shadow(0 0 5px rgba(170,178,185,.22))}#hotspots .hotspot.searched.found{fill:rgba(130,138,145,.12)!important;stroke:rgba(180,187,193,.78)!important}#hotspots .hotspot.searched-has-items{fill:rgba(150,158,165,.15)!important;stroke:rgba(200,207,213,.86)!important;filter:drop-shadow(0 0 2px rgba(205,212,218,.55)) drop-shadow(0 0 6px rgba(205,212,218,.27))}#hotspots .hotspot.searched-empty{fill:rgba(95,100,105,.06)!important;stroke:rgba(125,132,138,.45)!important;filter:none}#hotspots .ignore-frame{fill:none!important;stroke:none!important;pointer-events:none!important}#hotspots .str0,#hotspots .str1{stroke:inherit}#hotspots .fil0{fill:inherit}
@@ -945,6 +945,22 @@ body{
   .detailBtn.destroyCompact{min-width:74px;font-size:9px;padding:7px 8px}
 }
 
+
+/* === TAMA 0.19.8 — CAPACIDADES / AÇÕES COMPACTAS === */
+#stage.battery-open #interactButton{display:none!important}
+#detailActions .detailActionRow{display:flex!important;flex-direction:row!important;align-items:center!important;gap:7px!important;width:100%!important;flex-wrap:nowrap!important}
+#detailActions .detailActionRow .detailBtn.compactAction,
+#detailActions #destroyActionBtn.destroyCompact{width:auto!important;min-width:0!important;min-height:34px!important;height:34px!important;flex:0 1 auto!important;padding:0 11px!important;border-radius:8px!important;font-size:10px!important;line-height:1!important}
+#detailActions #destroyActionBtn.destroyCompact{background:rgba(143,42,48,.15)!important;box-shadow:inset 0 0 0 1px rgba(220,73,73,.30)!important;color:#ffdfe1!important}
+#detailActions .takeAction{width:100%!important;min-height:56px!important;font-size:16px!important;border-radius:11px!important}
+#detailActions .mainUseAction{width:100%!important;min-height:54px!important;font-size:15px!important}
+@media (orientation:landscape) and (max-height:500px){
+  #detailActions .detailActionRow{gap:6px!important}
+  #detailActions .detailActionRow .detailBtn.compactAction,#detailActions #destroyActionBtn.destroyCompact{height:32px!important;min-height:32px!important;padding:0 9px!important;font-size:9px!important}
+  #detailActions .takeAction{min-height:50px!important;font-size:14px!important}
+  #detailActions .mainUseAction{min-height:48px!important;font-size:13px!important}
+}
+
 </style>
 </head><body>
 <div id="ambientBackdrop"></div>
@@ -1111,7 +1127,7 @@ const CONSUME_HOLD_MS=1300;
 const LOCAL_SAVE_KEY='tama_game_local_save_v1';let lastLocalBatterySave=0,lastSurvivalTick=performance.now(),lastSurvivalSave=0;
 const survival={health:100,hunger:72,thirst:60,fatigue:78};
 const worldTime={day:1,minute:8*60};
-const BACKPACK_INFO={name:'Mochila Escolar',slots:12};
+const BACKPACK_INFO={name:'Mochila Escolar',slots:24};
 let prototype019Injected=false;
 const LIGHT_SOURCES={
   flashlight:{
@@ -1199,10 +1215,10 @@ const ITEMS={
   chocolate:{emoji:'🍫',name:'Barra de chocolate',description:'Energia rápida e bastante açúcar. Ajuda na fome, mas dá sede.',category:'food',conditions:['good','regular'],useAction:'Comer',effects:{hunger:16,thirst:-8,fatigue:4}},
   crackers:{emoji:'🍪',name:'Biscoito seco',description:'Velho, seco e salgado. Enche o estômago, mas pede água logo depois.',category:'food',conditions:['good','regular','spoiling'],useAction:'Comer',effects:{hunger:18,thirst:-10}},
   salty_snack:{emoji:'🥨',name:'Salgadinho salgado',description:'Crocante, salgado e péssimo para quem já está com sede.',category:'food',conditions:['good','regular','spoiling'],useAction:'Comer',effects:{hunger:14,thirst:-14}},
-  water_bottle:{emoji:'🥤',name:'Copo de água',description:'Copo reutilizável. Pode guardar água e ser enchido novamente.',category:'container',conditions:['good','regular'],liquidContainer:true,capacity:100},
+  water_bottle:{emoji:'🥤',name:'Copo de água',description:'Copo reutilizável. Pode guardar água e ser enchido novamente.',category:'container',liquidContainer:true,capacity:100},
   battery:{emoji:'🔋',name:'Bateria',description:'Um conjunto de baterias compatível com qualquer lanterna. A carga restante acompanha este item.',category:'energy'},
-  cloth:{emoji:'🧵',name:'Retalho de tecido',description:'Material reaproveitável para reparos, curativos improvisados e crafting.',category:'material',conditions:['good','regular']},
-  bandage:{emoji:'🩹',name:'Curativo adesivo',description:'Pequeno curativo para cortes e ferimentos leves.',category:'medical',conditions:['good','regular'],useAction:'Usar',effects:{health:18}}
+  cloth:{emoji:'🧵',name:'Retalho de tecido',description:'Material reaproveitável para reparos, curativos improvisados e crafting.',category:'material'},
+  bandage:{emoji:'🩹',name:'Curativo adesivo',description:'Pequeno curativo para cortes e ferimentos leves.',category:'medical',useAction:'Usar',effects:{health:18}}
 };
 const inventory={
   battery_test_62:{id:'battery',uid:'battery_test_62',qty:1,category:'energy',charge:62},
@@ -1239,12 +1255,12 @@ function tagHTML(item){
   }
   if(item.id==='water_bottle'){
     const fill=Math.max(0,Math.min(100,Math.round(item.fill??0)));
-    const liquid=fill>0?liquidName(item):'Vazio';
-    return `<span class="metaBlock"><span class="metaCore"><span class="tag container">Recipiente</span><span class="tag water">${liquid} · ${fill}%</span></span></span>`;
+    const state=fill<=0?'Vazio':((item.fluidType||'clean_water')==='dirty_water'?'Água suja':'Água limpa')+` · ${fill}%`;
+    return `<span class="metaBlock"><span class="metaCore"><span class="tag container">Recipiente</span><span class="tag water">${state}</span></span></span>`;
   }
-  const d=ITEMS[item.id];
-  const effects=effectTagsHTML(d.effects);
-  return `<span class="metaBlock"><span class="metaCore"><span class="tag ${item.category}">${CAT_LABEL[item.category]}</span><span class="tag ${item.condition}">${COND_LABEL[item.condition]}</span></span>${effects?`<span class="effectRow">${effects}</span>`:''}</span>`;
+  const d=ITEMS[item.id],effects=effectTagsHTML(d.effects);
+  const condition=item.category==='food'&&item.condition?`<span class="tag ${item.condition}">${COND_LABEL[item.condition]||item.condition}</span>`:'';
+  return `<span class="metaBlock"><span class="metaCore"><span class="tag ${item.category}">${CAT_LABEL[item.category]}</span>${condition}</span>${effects?`<span class="effectRow">${effects}</span>`:''}</span>`;
 }
 function slotToneClass(it){
   if(!it)return'';
@@ -1252,6 +1268,8 @@ function slotToneClass(it){
     const c=Math.max(0,Math.min(100,Math.round(it.charge??0)));
     return c<=0?'tone-dead':c<=25?'tone-low':c<=60?'tone-mid':'tone-good';
   }
+  if(it.id==='water_bottle')return (it.fill??0)<=0?'tone-dead':(it.fluidType==='dirty_water'?'tone-low':'tone-good');
+  if(it.category!=='food')return'';
   return ({good:'tone-good',regular:'tone-regular',spoiling:'tone-spoiling',spoiled:'tone-spoiled'})[it.condition]||'';
 }
 function displayContainerName(rawId){
@@ -1269,9 +1287,32 @@ function displayContainerName(rawId){
     return lw.charAt(0).toUpperCase()+lw.slice(1);
   }).join(' ')||'Container';
 }
+function containerCapacity(id){
+  const m=String(id||'').match(/_([smpgl])_\d+$/i),size=(m?.[1]||'m').toLowerCase();
+  if(size==='s'||size==='p')return 6;
+  if(size==='g'||size==='l')return 18;
+  return 12;
+}
+function canMergeStoredItems(a,b){
+  if(!a||!b||a.id!==b.id)return false;
+  if(a.id==='battery')return (a.charge??0)<=0&&(b.charge??0)<=0;
+  if(a.id==='water_bottle')return (a.fill??0)<=0&&(b.fill??0)<=0;
+  if(a.category==='food')return (a.condition||'good')===(b.condition||'good');
+  return true;
+}
+function findContainerMergeIndex(items,item){return items.findIndex(x=>canMergeStoredItems(x,item))}
+function inventorySlotCount(){return Object.keys(inventory).length}
+function inventoryMergeKeyFor(item){
+  if(!item)return null;
+  if(item.id==='battery')return (item.charge??0)<=0?'battery_dead':null;
+  if(item.id==='water_bottle')return (item.fill??0)<=0?'water_empty':null;
+  if(item.category==='food')return `${item.id}__${item.condition||'good'}`;
+  return item.id;
+}
+function canStoreInventoryItem(item){const key=inventoryMergeKeyFor(item);return !!(key&&inventory[key])||inventorySlotCount()<BACKPACK_INFO.slots}
 function updateInventoryTitles(){
   if(backpackSectionTitle)backpackSectionTitle.textContent=`🎒 ${BACKPACK_INFO.name} ${BACKPACK_INFO.slots} Slots`;
-  if(containerSectionTitle)containerSectionTitle.textContent=uiMode==='container'&&openContainerId?displayContainerName(openContainerId):'Container';
+  if(containerSectionTitle)containerSectionTitle.textContent=uiMode==='container'&&openContainerId?`${displayContainerName(openContainerId)} ${containerCapacity(openContainerId)} Slots`:'Container';
   if(containerSectionSubtitle)containerSectionSubtitle.textContent='';
 }
 function flashlightPower(){
@@ -1330,12 +1371,12 @@ function showDoorConfirm(d){
   doorName.textContent=d.label||'Porta';
   doorDesc.textContent=doorDescription(d);
   doorReveal.classList.add('open');
-  hidePrompt();
+  hidePrompt();updateInteractButton();
 }
 function closeDoorConfirm(){
   doorReveal.classList.remove('open');
   pendingDoor=null;
-  hidePrompt();
+  hidePrompt();updateInteractButton();
 }
 function usePendingDoor(){
   const d=pendingDoor;
@@ -1349,11 +1390,20 @@ function worldActionLabel(el){if(!el)return'Interagir';const d=doorFor(el);if(d)
 function showPromptFor(el,e){hovered=el;setPrompt(worldActionLabel(el),containerState[el.id]?.searched?'searched':'normal',e.clientX,e.clientY)}
 function positionPromptOverElement(el){if(!el)return;const sr=stage.getBoundingClientRect(),r=el.getBoundingClientRect();const x=(r.left+r.right)/2-sr.left,y=Math.max(18,r.top-sr.top-7);prompt.style.left=`${Math.max(65,Math.min(sr.width-65,x))}px`;prompt.style.top=`${y}px`;prompt.style.transform='translate(-50%,-100%)'}
 function selectedWorldElement(){return selectedWorldId?document.getElementById(selectedWorldId):null}
-function updateInteractButton(){if(lootReveal.classList.contains('open')&&currentRevealItem){interactButton.textContent='Pegar';interactButton.classList.add('active');interactButton.classList.remove('busy');interactButton.disabled=false;return}const el=selectedWorldElement();let label='Interagir',active=false;if(el){label=worldActionLabel(el);active=true}else{const src=currentLightSource();if(src.actionMode==='ignite'){label=lightOn?'Apagar':'Acender';active=true}else if(src.actionMode==='crank'){label='Girar manivela';active=true}}interactButton.textContent=worldSearchBusy?'Vasculhando...':label;interactButton.classList.toggle('active',active&&!worldSearchBusy);interactButton.classList.toggle('busy',worldSearchBusy);interactButton.disabled=worldSearchBusy||transferBusy}
+function updateInteractButton(){
+  if(doorReveal.classList.contains('open')&&pendingDoor){interactButton.textContent=pendingDoor.target?'Usar porta':'Indisponível';interactButton.classList.toggle('active',!!pendingDoor.target);interactButton.classList.remove('busy');interactButton.disabled=!pendingDoor.target;return}
+  if(lootReveal.classList.contains('open')&&currentRevealItem){interactButton.textContent='Pegar';interactButton.classList.add('active');interactButton.classList.remove('busy');interactButton.disabled=false;return}
+  const el=selectedWorldElement();let label='Interagir',active=false;if(el){label=worldActionLabel(el);active=true}else{const src=currentLightSource();if(src.actionMode==='ignite'){label=lightOn?'Apagar':'Acender';active=true}else if(src.actionMode==='crank'){label='Girar manivela';active=true}}
+  interactButton.textContent=worldSearchBusy?'Vasculhando...':label;interactButton.classList.toggle('active',active&&!worldSearchBusy);interactButton.classList.toggle('busy',worldSearchBusy);interactButton.disabled=worldSearchBusy||transferBusy;
+}
 function clearWorldSelection(){const old=selectedWorldElement();if(old)old.classList.remove('world-selected');selectedWorldId=null;updateInteractButton();if(!worldSearchBusy)hidePrompt()}
 function selectWorldElement(el){if(!el||worldSearchBusy)return;const old=selectedWorldElement();if(old&&old!==el)old.classList.remove('world-selected');selectedWorldId=el.id;el.classList.add('world-selected');updateInteractButton()}
 function startWorldSearch(el){if(!el||containerState[el.id]?.searched||worldSearchBusy)return;worldSearchBusy=true;holding=el;el.classList.add('clicked');updateInteractButton();let dots=1;const paint=()=>{actionText.textContent='Vasculhando'+'.'.repeat(dots);dots=dots%3+1;positionPromptOverElement(el);prompt.classList.add('visible')};paint();worldSearchDotsTimer=setInterval(paint,320);worldSearchTimer=setTimeout(()=>{worldSearchTimer=0;completeSearch(el)},SEARCH_TIME)}
-function performModularInteraction(){if(lootReveal.classList.contains('open')&&currentRevealItem){takeReveal();return}if(worldSearchBusy||transferBusy)return;const el=selectedWorldElement();if(el){const d=doorFor(el);if(d){showDoorConfirm(d);return}const st=containerState[el.id];if(st?.searched){window.TAMA_UI.openContainer(el.id);return}startWorldSearch(el);return}const src=currentLightSource();if(src.actionMode==='ignite'||src.actionMode==='crank')performLightAction()}
+function performModularInteraction(){
+  if(doorReveal.classList.contains('open')&&pendingDoor){if(pendingDoor.target)usePendingDoor();return}
+  if(lootReveal.classList.contains('open')&&currentRevealItem){takeReveal();return}
+  if(worldSearchBusy||transferBusy)return;const el=selectedWorldElement();if(el){const d=doorFor(el);if(d){showDoorConfirm(d);return}const st=containerState[el.id];if(st?.searched){window.TAMA_UI.openContainer(el.id);return}startWorldSearch(el);return}const src=currentLightSource();if(src.actionMode==='ignite'||src.actionMode==='crank')performLightAction();
+}
 function stopDots(){if(dotsTimer)clearInterval(dotsTimer);dotsTimer=0;dots=0}function startDots(){stopDots();const f=()=>{dots=dots%3+1;actionText.textContent='Vasculhando'+'.'.repeat(dots)};f();dotsTimer=setInterval(f,320)}
 function cancelSearch(){if(!worldSearchBusy)return;if(worldSearchTimer)clearTimeout(worldSearchTimer);if(worldSearchDotsTimer)clearInterval(worldSearchDotsTimer);worldSearchTimer=0;worldSearchDotsTimer=0;worldSearchBusy=false;if(holding)holding.classList.remove('clicked');holding=null;stopDots();hidePrompt();updateInteractButton()}
 function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}function pick(a){return a[Math.floor(Math.random()*a.length)]}function makeUid(){return 'b_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
@@ -1363,9 +1413,10 @@ function mk(id){
   if(id==='battery')return {id:'battery',uid:makeUid(),qty:1,category:'energy',charge:rand(0,100)};
   if(id==='water_bottle'){
     const fill=pick([20,40,60,80,100]);
-    return {id:'water_bottle',uid:makeItemUid('water'),qty:1,category:'container',condition:pick(d.conditions),fill,fluidType:'clean_water'};
+    return {id:'water_bottle',uid:makeItemUid('water'),qty:1,category:'container',fill,fluidType:'clean_water'};
   }
-  return {id,qty:Math.random()<.42?rand(2,3):1,category:d.category,condition:pick(d.conditions)};
+  if(d.category==='food')return {id,qty:Math.random()<.42?rand(2,3):1,category:d.category,condition:pick(d.conditions||['good','regular'])};
+  return {id,qty:Math.random()<.42?rand(2,3):1,category:d.category};
 }
 function generate(id){const pool=SCENES[currentScene].loot[id]||['cloth','battery','bandage'];if(Math.random()<.27)return[];const n=rand(1,Math.min(3,pool.length));return[...pool].sort(()=>Math.random()-.5).slice(0,n).map(mk)}
 function updateState(id){const el=document.getElementById(id),st=containerState[id];if(!el)return;el.classList.remove('searched','searched-has-items','searched-empty');if(!st?.searched)return;el.classList.add('searched',st.remaining.length?'searched-has-items':'searched-empty')}
@@ -1385,31 +1436,37 @@ function completeSearch(el){if(worldSearchTimer)clearTimeout(worldSearchTimer);i
 function tick(now){if(!holding)return;if(now-holdStart>=SEARCH_TIME){completeSearch(holding);raf=0;return}raf=requestAnimationFrame(tick)}function beginSearch(el,e){holding=el;holdStart=performance.now();el.classList.add('clicked');startDots();positionPrompt(e.clientX,e.clientY);prompt.classList.add('visible');raf=requestAnimationFrame(tick)}
 function renderLoot(item){const d=ITEMS[item.id];lootEmoji.textContent=d.emoji;lootName.textContent=d.name;lootDesc.textContent=itemDescription(item);lootMeta.innerHTML=tagHTML(item);lootQty.textContent=item.qty>1?`x${item.qty}`:'';lootQty.classList.toggle('visible',item.qty>1)}
 function showNext(){hidePrompt();if(!revealQueue.length){lootReveal.classList.remove('open');currentRevealItem=null;updateState(revealContainerId);updateInteractButton();return}currentRevealItem=revealQueue.shift();renderLoot(currentRevealItem);lootReveal.classList.add('open');updateInteractButton()}
-function storeInventoryItem(i){const item={...i};if(item.id==='battery'){const charge=Math.max(0,Math.min(100,item.charge??0));item.charge=charge;if(charge<=0){const key='battery_dead',incomingQty=Math.max(1,item.qty??1);if(inventory[key])inventory[key].qty=(inventory[key].qty??1)+incomingQty;else inventory[key]={id:'battery',uid:key,qty:incomingQty,category:'energy',charge:0};return key}const uid=item.uid||makeUid();inventory[uid]={...item,uid,qty:1};return uid}if(item.id==='water_bottle'){const fill=Math.max(0,Math.min(100,item.fill??0));if(fill<=0){const key='water_empty',incomingQty=Math.max(1,item.qty??1);if(inventory[key])inventory[key].qty=(inventory[key].qty??1)+incomingQty;else inventory[key]={id:'water_bottle',uid:key,qty:incomingQty,category:'container',condition:item.condition||'good',fill:0,fluidType:null};return key}const uid=item.uid||makeItemUid('water');inventory[uid]={...item,uid,qty:1,fill,fluidType:item.fluidType||'clean_water'};return uid}const k=`${item.id}__${item.condition}`;if(!inventory[k])inventory[k]={...item};else inventory[k].qty=(inventory[k].qty??1)+(item.qty??1);return k}
-function normalizeEmptyCups(){
-  let emptyCount=0,condition='good';
-  const snapshot=Object.entries(inventory);
-  for(const [key,it] of snapshot){
-    if(it?.id!=='water_bottle')continue;
-    const fill=Math.max(0,Math.min(100,it.fill??0)),qty=Math.max(1,it.qty??1);
-    if(fill<=0){emptyCount+=qty;condition=it.condition||condition;delete inventory[key];continue}
-    if(key==='water_empty'||qty>1){
-      delete inventory[key];
-      for(let n=0;n<qty;n++){
-        const uid=makeItemUid('water');
-        inventory[uid]={...it,uid,qty:1,fill,fluidType:it.fluidType||'clean_water'};
-      }
-    }
+function storeInventoryItem(i){
+  const item={...i};
+  if(item.id==='battery'){
+    const charge=Math.max(0,Math.min(100,item.charge??0));item.charge=charge;
+    if(charge<=0){const key='battery_dead',q=Math.max(1,item.qty??1);if(inventory[key])inventory[key].qty=(inventory[key].qty??1)+q;else inventory[key]={id:'battery',uid:key,qty:q,category:'energy',charge:0};return key}
+    const uid=item.uid||makeUid();inventory[uid]={...item,uid,qty:1};return uid;
   }
-  if(emptyCount>0)inventory.water_empty={id:'water_bottle',uid:'water_empty',qty:emptyCount,category:'container',condition,fill:0,fluidType:null};
+  if(item.id==='water_bottle'){
+    const fill=Math.max(0,Math.min(100,item.fill??0));
+    if(fill<=0){const key='water_empty',q=Math.max(1,item.qty??1);if(inventory[key])inventory[key].qty=(inventory[key].qty??1)+q;else inventory[key]={id:'water_bottle',uid:key,qty:q,category:'container',fill:0,fluidType:null};return key}
+    const uid=item.uid||makeItemUid('water');inventory[uid]={...item,uid,qty:1,fill,fluidType:item.fluidType||'clean_water'};delete inventory[uid].condition;return uid;
+  }
+  const k=item.category==='food'?`${item.id}__${item.condition||'good'}`:item.id;
+  if(!inventory[k]){inventory[k]={...item};if(item.category!=='food')delete inventory[k].condition}else inventory[k].qty=(inventory[k].qty??1)+(item.qty??1);
+  return k;
+}
+function normalizeEmptyCups(){
+  let emptyCount=0;const snapshot=Object.entries(inventory);
+  for(const [key,it] of snapshot){
+    if(it?.id!=='water_bottle')continue;delete it.condition;
+    const fill=Math.max(0,Math.min(100,it.fill??0)),qty=Math.max(1,it.qty??1);
+    if(fill<=0){emptyCount+=qty;delete inventory[key];continue}
+    if(key==='water_empty'||qty>1){delete inventory[key];for(let n=0;n<qty;n++){const uid=makeItemUid('water');inventory[uid]={...it,uid,qty:1,fill,fluidType:it.fluidType||'clean_water'}}}
+  }
+  if(emptyCount>0)inventory.water_empty={id:'water_bottle',uid:'water_empty',qty:emptyCount,category:'container',fill:0,fluidType:null};
   return emptyCount>0?'water_empty':null;
 }
 function addInventory(i){
-  storeInventoryItem(i);
-  renderBatteryPanel();
-  if(inventoryOverlay.classList.contains('open'))renderUnifiedGrids();
-  saveAfterAction();
-}function takeReveal(){if(currentRevealItem){addInventory(currentRevealItem);showNext()}}function leaveReveal(){if(currentRevealItem&&revealContainerId){containerState[revealContainerId].remaining.push({...currentRevealItem});saveAfterAction();showNext()}}
+  if(!canStoreInventoryItem(i)){survivalMessage('Mochila cheia.');return false}
+  storeInventoryItem(i);renderBatteryPanel();if(inventoryOverlay.classList.contains('open'))renderUnifiedGrids();saveAfterAction();return true;
+}function takeReveal(){if(currentRevealItem){if(!addInventory(currentRevealItem))return;showNext()}}function leaveReveal(){if(currentRevealItem&&revealContainerId){containerState[revealContainerId].remaining.push({...currentRevealItem});saveAfterAction();showNext()}}
 
 
 
@@ -1597,7 +1654,7 @@ function consumeStackItem(key){
   survivalMessage(d.useAction==='Usar'?'Item usado.':'Consumido.');
   renderUnifiedGrids();renderDetail();saveAfterAction();
 }
-function drinkBottle(key){const item=inventory[key];if(!item||item.id!=='water_bottle'||(item.fill??0)<=0)return;const amount=Math.min(25,item.fill),dirty=item.fluidType==='dirty_water';item.fill-=amount;applyRawSurvivalDeltas(dirty?{thirst:amount*.75,health:-5}:{thirst:amount},true);if(item.fill<=0){item.fill=0;item.fluidType=null;const condition=item.condition||'good';delete inventory[key];const emptyKey=storeInventoryItem({id:'water_bottle',qty:1,category:'container',condition,fill:0,fluidType:null});selectedSource='inventory';selectedKey=emptyKey}advanceGameMinutes(1);renderUnifiedGrids();renderDetail();saveAfterAction()}
+function drinkBottle(key){const item=inventory[key];if(!item||item.id!=='water_bottle'||(item.fill??0)<=0)return;const amount=Math.min(25,item.fill),dirty=item.fluidType==='dirty_water';item.fill-=amount;applyRawSurvivalDeltas(dirty?{thirst:amount*.75,health:-5}:{thirst:amount},true);if(item.fill<=0){item.fill=0;item.fluidType=null;delete inventory[key];const emptyKey=storeInventoryItem({id:'water_bottle',qty:1,category:'container',fill:0,fluidType:null});selectedSource='inventory';selectedKey=emptyKey}advanceGameMinutes(1);renderUnifiedGrids();renderDetail();saveAfterAction()}
 function compatibleBottleEntries(sourceKey){
   const source=inventory[sourceKey];
   if(!source||source.id!=='water_bottle'||(source.fill??0)<=0)return[];
@@ -1611,10 +1668,10 @@ function showLiquidTargets(sourceKey){const source=inventory[sourceKey];if(!sour
 function detachEmptyCupForFill(targetKey){
   const target=inventory[targetKey];
   if(!target||target.id!=='water_bottle'||(target.fill??0)>0)return targetKey;
-  const condition=target.condition||'good',qty=Math.max(1,target.qty??1);
+  const qty=Math.max(1,target.qty??1);
   if(qty>1)target.qty=qty-1;else delete inventory[targetKey];
   const uid=makeItemUid('water');
-  inventory[uid]={id:'water_bottle',uid,qty:1,category:'container',condition,fill:0,fluidType:null};
+  inventory[uid]={id:'water_bottle',uid,qty:1,category:'container',fill:0,fluidType:null};
   return uid;
 }
 function transferLiquid(sourceKey,targetKey){
@@ -1628,7 +1685,7 @@ function transferLiquid(sourceKey,targetKey){
   if((target.fill??0)<=0)target.fluidType=source.fluidType;
   target.fill=(target.fill??0)+moved;source.fill-=moved;
   let newSourceKey=sourceKey;
-  if(source.fill<=0){const condition=source.condition||'good';delete inventory[sourceKey];newSourceKey=storeInventoryItem({id:'water_bottle',qty:1,category:'container',condition,fill:0,fluidType:null})}
+  if(source.fill<=0){delete inventory[sourceKey];newSourceKey=storeInventoryItem({id:'water_bottle',qty:1,category:'container',fill:0,fluidType:null})}
   normalizeEmptyCups();advanceGameMinutes(1);saveAfterAction();return{moved,targetKey,sourceKey:newSourceKey};
 }
 function clearLiquidTransferVisuals(){
@@ -1657,6 +1714,28 @@ function startLiquidTransfer(sourceKey,targetKey){
     }
   },1200);
 }
+function normalizeConditionSystem(){
+  const rebuilt={};
+  const put=(raw)=>{
+    if(!raw)return;const item={...raw};
+    if(item.id==='water_bottle')delete item.condition;
+    if(item.category!=='food'&&item.id!=='battery'&&item.id!=='water_bottle')delete item.condition;
+    if(item.id==='battery'){
+      const c=Math.max(0,Math.min(100,item.charge??0));
+      if(c<=0){if(rebuilt.battery_dead)rebuilt.battery_dead.qty=(rebuilt.battery_dead.qty??1)+(item.qty??1);else rebuilt.battery_dead={id:'battery',uid:'battery_dead',qty:item.qty??1,category:'energy',charge:0};return}
+      const uid=item.uid||makeUid();rebuilt[uid]={...item,uid,qty:1};return;
+    }
+    if(item.id==='water_bottle'){
+      const fill=Math.max(0,Math.min(100,item.fill??0));
+      if(fill<=0){if(rebuilt.water_empty)rebuilt.water_empty.qty=(rebuilt.water_empty.qty??1)+(item.qty??1);else rebuilt.water_empty={id:'water_bottle',uid:'water_empty',qty:item.qty??1,category:'container',fill:0,fluidType:null};return}
+      const uid=item.uid||makeItemUid('water');rebuilt[uid]={...item,uid,qty:1,fill,fluidType:item.fluidType||'clean_water'};return;
+    }
+    const key=item.category==='food'?`${item.id}__${item.condition||'good'}`:item.id;
+    if(rebuilt[key])rebuilt[key].qty=(rebuilt[key].qty??1)+(item.qty??1);else rebuilt[key]=item;
+  };
+  Object.values(inventory).forEach(put);Object.keys(inventory).forEach(k=>delete inventory[k]);Object.assign(inventory,rebuilt);
+  for(const scene of Object.values(sceneStates||{}))for(const st of Object.values(scene||{}))for(const it of (st?.remaining||[])){if(it.id==='water_bottle'||(it.category!=='food'&&it.id!=='battery'))delete it.condition}
+}
 function normalizeDeadBatteries(){
   let count=0;
   for(const [key,it] of Object.entries(inventory)){
@@ -1670,8 +1749,8 @@ function normalizeDeadBatteries(){
 function ensurePrototype019Items(){
   if(prototype019Injected)return;
   const put=(key,item)=>{if(!inventory[key])inventory[key]=item};
-  put('water_test_40_a',{id:'water_bottle',uid:'water_test_40_a',qty:1,category:'container',condition:'good',fill:40,fluidType:'clean_water'});
-  put('water_test_40_b',{id:'water_bottle',uid:'water_test_40_b',qty:1,category:'container',condition:'good',fill:40,fluidType:'clean_water'});
+  put('water_test_40_a',{id:'water_bottle',uid:'water_test_40_a',qty:1,category:'container',fill:40,fluidType:'clean_water'});
+  put('water_test_40_b',{id:'water_bottle',uid:'water_test_40_b',qty:1,category:'container',fill:40,fluidType:'clean_water'});
   if(!inventory['canned_soup__good'])inventory['canned_soup__good']={id:'canned_soup',qty:1,category:'food',condition:'good'};
   if(!inventory['salty_snack__good'])inventory['salty_snack__good']={id:'salty_snack',qty:1,category:'food',condition:'good'};
   if(!inventory['chocolate__good'])inventory['chocolate__good']={id:'chocolate',qty:1,category:'food',condition:'good'};
@@ -1774,7 +1853,7 @@ function renderUnifiedGrids(){
   }
   containerGridUnified.innerHTML='';
   if(uiMode==='container'&&openContainerId){
-    const items=containerState[openContainerId]?.remaining||[],total=Math.max(12,items.length);
+    const items=containerState[openContainerId]?.remaining||[],total=Math.max(containerCapacity(openContainerId),items.length);
     for(let i=0;i<total;i++){
       const slot=document.createElement('div');slot.className='invSlot';const it=items[i];
       if(!it){slot.classList.add('empty');containerGridUnified.appendChild(slot);continue}
@@ -1793,17 +1872,14 @@ function renderDetail(){
   const d=ITEMS[item.id],dead=item.id==='battery'&&(item.charge??0)<=0?'<div class="previewDeadX">✖</div>':'';detailPreviewEmoji.innerHTML=`${d.emoji}${dead}`;detailName.textContent=d.name;detailDesc.textContent=itemDescription(item);detailMeta.innerHTML=tagHTML(item);
   const consumable=selectedSource==='inventory'&&isConsumableItem(item);detailPreview.classList.toggle('consume-ready',consumable);
   let html='';
-  if(selectedSource==='container'){
-    html=`<button id="transferActionBtn" class="detailBtn primary takeAction">Pegar</button>`;
-  }else if(selectedSource==='inventory'){
-    const top=[];
-    if(uiMode==='container'&&openContainerId)top.push(`<button id="transferActionBtn" class="detailBtn primary">Guardar</button>`);
-    else if(item.id==='water_bottle'&&(item.fill??0)>0)top.push(`<button id="liquidTransferBtn" class="detailBtn primary">Transferir líquido</button>`);
-    top.push(`<button id="destroyActionBtn" class="detailBtn danger destroyCompact">Destruir</button>`);
-    html+=`<div class="detailActionRow">${top.join('')}</div>`;
-    if(uiMode==='container'&&openContainerId&&item.id==='water_bottle'&&(item.fill??0)>0)html+=`<button id="liquidTransferBtn" class="detailBtn primary">Transferir líquido</button>`;
-    const actionLabel=primaryItemActionLabel(item);
-    if(actionLabel)html+=`<button id="mainItemActionBtn" class="detailBtn mainUseAction ${actionLabel==='Usar'?'use':''}">${actionLabel}</button>`;
+  if(selectedSource==='container')html=`<button id="transferActionBtn" class="detailBtn primary takeAction">Pegar</button>`;
+  else if(selectedSource==='inventory'){
+    const secondary=[];
+    if(uiMode==='container'&&openContainerId)secondary.push(`<button id="transferActionBtn" class="detailBtn primary compactAction">Guardar</button>`);
+    if(item.id==='water_bottle'&&(item.fill??0)>0)secondary.push(`<button id="liquidTransferBtn" class="detailBtn primary compactAction">Transferir</button>`);
+    secondary.push(`<button id="destroyActionBtn" class="detailBtn danger destroyCompact compactAction">Destruir</button>`);
+    html+=`<div class="detailActionRow">${secondary.join('')}</div>`;
+    const actionLabel=primaryItemActionLabel(item);if(actionLabel)html+=`<button id="mainItemActionBtn" class="detailBtn mainUseAction ${actionLabel==='Usar'?'use':''}">${actionLabel}</button>`;
   }
   detailActions.innerHTML=html;
   const transferBtn=document.getElementById('transferActionBtn');if(transferBtn)transferBtn.onclick=e=>{e.preventDefault();e.stopPropagation();selectedSource==='container'?transferContainerToInventory(Number(selectedKey)):transferInventoryToContainer(selectedKey)};
@@ -1814,16 +1890,19 @@ function renderDetail(){
 function openUnifiedInventory(mode='backpack',containerId=null){cancelDestroy();cancelLiquidTransferMode();resetInventoryTap();uiMode=mode;openContainerId=mode==='container'?containerId:null;if(mode==='container'&&openContainerId&&!containerState[openContainerId])containerState[openContainerId]={searched:true,remaining:[]};selectedSource=null;selectedKey=null;batteryOverlay.classList.remove('open');stage.classList.remove('battery-open');inventoryPanel.classList.toggle('backpackOnly',mode!=='container');inventoryOverlay.classList.add('open');inventoryOverlay.style.display='flex';inventoryOverlay.style.pointerEvents='auto';stage.classList.add('inventory-open');updateInventoryTitles();renderUnifiedGrids();renderDetail();syncFloatingHud()}
 function closeUnifiedInventory(){cancelDestroy();cancelConsumeHold();cancelLiquidTransferMode();resetInventoryTap();inventoryOverlay.classList.remove('open');inventoryOverlay.style.display='none';stage.classList.remove('inventory-open');if(openContainerId)updateState(openContainerId);openContainerId=null;selectedSource=null;selectedKey=null;uiMode='backpack';updateInventoryTitles();syncFloatingHud();saveAfterAction()}
 function transferContainerToInventory(index){
-  if(!openContainerId)return;
-  const st=containerState[openContainerId],it=st?.remaining?.[index];if(!it)return;
-  addInventory({...it});st.remaining.splice(index,1);updateState(openContainerId);
-  selectedSource=null;selectedKey=null;renderUnifiedGrids();renderDetail();saveAfterAction();
+  if(!openContainerId)return false;
+  const st=containerState[openContainerId],it=st?.remaining?.[index];if(!it)return false;
+  if(!canStoreInventoryItem(it)){survivalMessage('Mochila cheia.');return false}
+  if(!addInventory({...it}))return false;
+  st.remaining.splice(index,1);updateState(openContainerId);selectedSource=null;selectedKey=null;renderUnifiedGrids();renderDetail();saveAfterAction();return true;
 }
 function transferInventoryToContainer(key){
-  if(!openContainerId||!inventory[key])return;
-  const st=containerState[openContainerId]||(containerState[openContainerId]={searched:true,remaining:[]});
-  st.searched=true;st.remaining.push({...inventory[key]});delete inventory[key];
-  updateState(openContainerId);selectedSource=null;selectedKey=null;renderBatteryPanel();renderUnifiedGrids();renderDetail();saveAfterAction();
+  if(!openContainerId||!inventory[key])return false;
+  const st=containerState[openContainerId]||(containerState[openContainerId]={searched:true,remaining:[]});st.searched=true;
+  const item={...inventory[key]},mergeIndex=findContainerMergeIndex(st.remaining,item),cap=containerCapacity(openContainerId);
+  if(mergeIndex<0&&st.remaining.length>=cap){survivalMessage(`${displayContainerName(openContainerId)} cheio.`);return false}
+  if(mergeIndex>=0)st.remaining[mergeIndex].qty=(st.remaining[mergeIndex].qty??1)+(item.qty??1);else st.remaining.push(item);
+  delete inventory[key];updateState(openContainerId);selectedSource=null;selectedKey=null;renderBatteryPanel();renderUnifiedGrids();renderDetail();saveAfterAction();return true;
 }
 function paintDestroyHold(active,text='Destruindo.'){
   const slot=destroyKey?selectedInventorySlot(destroyKey):null;
@@ -2080,6 +2159,7 @@ batteryCloseBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagatio
 removeBatteryBtn.addEventListener('click',e=>{e.stopPropagation();removeInstalledBattery()});
 loadLocalGame();
 ensurePrototype019Items();
+normalizeConditionSystem();
 normalizeDeadBatteries();
 normalizeEmptyCups();
 updateSurvivalHUD();
@@ -2119,7 +2199,7 @@ inventoryCloseBtn.addEventListener('click',e=>{
 
 hotspotsHost.addEventListener('click',e=>{e.preventDefault();e.stopPropagation()});
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(inventoryOverlay.classList.contains('open'))closeUnifiedInventory();else if(batteryOverlay.classList.contains('open'))batteryOverlay.classList.remove('open');else if(doorReveal.classList.contains('open'))closeDoorConfirm();else if(lootReveal.classList.contains('open'))leaveReveal()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(inventoryOverlay.classList.contains('open'))closeUnifiedInventory();else if(batteryOverlay.classList.contains('open')){batteryOverlay.classList.remove('open');stage.classList.remove('battery-open');syncFloatingHud()}else if(doorReveal.classList.contains('open'))closeDoorConfirm();else if(lootReveal.classList.contains('open'))leaveReveal()}});
 
 window.addEventListener('beforeunload',saveLocalGame);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveLocalGame()});
