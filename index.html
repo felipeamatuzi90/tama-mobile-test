@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TAMA GAME — 0.19.5 — UX / Interação</title>
+<title>TAMA GAME — 0.19.6 — Inventário / Interface</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}body{display:grid;place-items:center;font-family:Arial,sans-serif}#stage{position:relative;width:min(100vw,calc(100vh*16/9));aspect-ratio:16/9;overflow:hidden;background:#000}#scene,#darkness,#hotspots,#sceneFade{position:absolute;inset:0;width:100%;height:100%}#scene{object-fit:fill;pointer-events:none}#darkness{pointer-events:none}#hotspots{overflow:visible}#hotspots>svg{width:100%;height:100%;display:block;overflow:visible}#sceneFade{z-index:95;background:#000;opacity:0;pointer-events:none;transition:opacity .18s ease}#sceneFade.on{opacity:1}
 #hotspots .hotspot{fill:rgba(0,0,0,.001)!important;stroke:transparent!important;stroke-width:2px!important;pointer-events:all;cursor:pointer;transition:stroke .08s linear,filter .08s linear,fill .08s linear;vector-effect:non-scaling-stroke}#hotspots .hotspot.found{fill:rgba(0,190,255,.10)!important;stroke:#27c8ff!important;filter:drop-shadow(0 0 2px rgba(39,200,255,.95)) drop-shadow(0 0 5px rgba(39,200,255,.55))}#hotspots .hotspot.clicked{fill:rgba(122,255,154,.12)!important;stroke:#7aff9a!important;filter:drop-shadow(0 0 2px rgba(122,255,154,.95)) drop-shadow(0 0 6px rgba(122,255,154,.55))}#hotspots .hotspot.searched{fill:rgba(130,138,145,.09)!important;stroke:rgba(165,173,180,.70)!important;filter:drop-shadow(0 0 2px rgba(170,178,185,.45)) drop-shadow(0 0 5px rgba(170,178,185,.22))}#hotspots .hotspot.searched.found{fill:rgba(130,138,145,.12)!important;stroke:rgba(180,187,193,.78)!important}#hotspots .hotspot.searched-has-items{fill:rgba(150,158,165,.15)!important;stroke:rgba(200,207,213,.86)!important;filter:drop-shadow(0 0 2px rgba(205,212,218,.55)) drop-shadow(0 0 6px rgba(205,212,218,.27))}#hotspots .hotspot.searched-empty{fill:rgba(95,100,105,.06)!important;stroke:rgba(125,132,138,.45)!important;filter:none}#hotspots .ignore-frame{fill:none!important;stroke:none!important;pointer-events:none!important}#hotspots .str0,#hotspots .str1{stroke:inherit}#hotspots .fil0{fill:inherit}
@@ -867,6 +867,56 @@ body{
 #destroyActionBtn{min-height:40px;font-size:10px}
 }
 
+
+/* === TAMA 0.19.6 — INVENTÁRIO / INTERFACE === */
+#detailPreview.consume-ready::after{display:none!important;content:''!important}
+#detailOrigin,#destroyHint,#doorHint{display:none!important}
+.metaBlock{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:100%}
+.metaCore{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px}
+.effectRow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px;margin-top:1px}
+.effectStat{display:inline-flex;align-items:center;gap:4px;min-height:23px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.055);font:900 12px/1 Arial,sans-serif}
+.effectEmoji{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:13px;line-height:1}
+.effectPositiveMini{color:#62df86;box-shadow:inset 0 0 0 1px rgba(98,223,134,.18)}
+.effectNegativeMini{color:#ff6868;box-shadow:inset 0 0 0 1px rgba(255,104,104,.18)}
+.invSlot.tone-good{background:rgba(52,124,72,.18)}
+.invSlot.tone-regular{background:rgba(151,119,42,.17)}
+.invSlot.tone-spoiling{background:rgba(175,94,42,.17)}
+.invSlot.tone-spoiled{background:rgba(145,50,55,.19)}
+.invSlot.tone-mid{background:rgba(151,119,42,.17)}
+.invSlot.tone-low{background:rgba(175,70,55,.18)}
+.invSlot.tone-dead{background:rgba(87,92,98,.18)}
+.invSlot.selected{background:rgba(56,196,255,.11)!important}
+.invSlot.transfer-target{background:rgba(53,184,235,.18)!important}
+.invSlot.destroying,#detailPreview.destroying{isolation:isolate;overflow:hidden}
+.invSlot.destroying::before,#detailPreview.destroying::before{content:'';position:absolute;inset:0;z-index:8;pointer-events:none;background:linear-gradient(to top,rgba(164,39,49,.56),rgba(122,26,34,.16));transform:scaleY(0);transform-origin:bottom;animation:tamaDestroyFill 1.7s linear forwards}
+.invSlot.destroying::after,#detailPreview.destroying::after{content:attr(data-destroy-text);position:absolute;left:50%;top:50%;z-index:9;transform:translate(-50%,-50%);padding:0;background:none;color:#ffd9dc;box-shadow:none;font:900 11px/1 Arial,sans-serif;text-shadow:0 2px 5px #000,0 0 8px #000;white-space:nowrap;pointer-events:none}
+#detailPreview.destroying::after{font-size:13px}
+@keyframes tamaDestroyFill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+#doorInfo{width:min(440px,92vw)}
+#doorName{font-size:clamp(28px,3vw,42px)!important;margin-bottom:12px}
+#doorDesc{max-width:430px!important;font-size:clamp(20px,1.9vw,28px)!important;line-height:1.16!important;color:#fff!important;font-weight:800}
+#stage.battery-open #backpackHUD{display:none!important}
+@media (orientation:landscape) and (max-height:500px){
+  #inventoryOverlay{position:fixed;inset:0;width:100dvw;height:100dvh;padding:0;align-items:stretch;justify-content:stretch}
+  #inventoryPanel,#inventoryPanel.backpackOnly{width:100dvw;height:100dvh;min-height:100dvh;max-height:100dvh;margin:0;border-radius:0;padding:max(48px,calc(env(safe-area-inset-top) + 42px)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));gap:8px}
+  #inventoryPanel{grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr) minmax(0,.95fr)}
+  #inventoryPanel.backpackOnly{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}
+  #inventoryGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;align-content:start}
+  #inventoryPanel:not(.backpackOnly) #inventoryGrid,#containerGridUnified{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;align-content:start}
+  .invSlot{aspect-ratio:1/1;min-height:0;height:auto;border-radius:9px}
+  .slotCenterUnified{font-size:34px!important}
+  .slotQtyUnified{font-size:10px!important}.slotCharge,.slotLiquid{font-size:8px!important}
+  #detailSection{overflow:auto!important}
+  #detailPreview{min-height:112px!important;max-height:126px!important;flex:0 0 118px!important;border-radius:10px}
+  #detailPreviewEmoji{font-size:62px!important}#detailName{font-size:17px!important;margin-top:7px!important}#detailDesc{font-size:10px!important;line-height:1.18!important;min-height:30px!important;margin-top:5px!important}
+  .tag{font-size:8px!important;padding:3px 6px!important}.effectStat{font-size:9px;min-height:20px;padding:3px 6px}.effectEmoji{font-size:11px}
+  #stage.inventory-open #survivalHUD{position:fixed;z-index:565;top:max(7px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));right:auto;transform:none;min-width:430px!important;max-width:82dvw!important;padding:7px 10px!important;gap:9px!important}
+  #stage.inventory-open .survivalRow{width:94px!important;grid-template-columns:16px 1fr 22px!important;gap:4px!important}#stage.inventory-open .survivalIcon{font-size:13px!important}#stage.inventory-open .survivalTrack{height:6px!important}#stage.inventory-open .survivalValue{font-size:9px!important}
+  #batteryOverlay{position:fixed;inset:0;align-items:flex-start!important;justify-content:flex-end!important;padding:max(64px,calc(env(safe-area-inset-top) + 58px)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))!important}
+  #batteryPanel{width:min(290px,58dvw)!important;max-height:calc(100dvh - 72px)!important}
+  #doorFocus{width:min(420px,72dvw)!important;min-width:260px!important;padding:8px 12px 12px!important}.doorEmojiWrap{min-width:110px!important;min-height:110px!important;margin-bottom:8px!important}#doorEmoji{font-size:88px!important}#doorName{font-size:24px!important;margin-bottom:7px!important}#doorDesc{font-size:17px!important;max-width:390px!important;line-height:1.18!important}
+}
+
 </style>
 </head><body>
 <div id="ambientBackdrop"></div>
@@ -941,8 +991,8 @@ body{
       <section id="containerSection" class="invSection">
         <div class="sectionHead">
           <div>
-            <div class="sectionTitle">Container</div>
-            <div class="sectionSubtitle" id="containerSectionSubtitle">Itens deixados aqui</div>
+            <div class="sectionTitle" id="containerSectionTitle">Container</div>
+            <div class="sectionSubtitle" id="containerSectionSubtitle"></div>
           </div>
         </div>
         <div id="containerGridUnified"></div>
@@ -951,8 +1001,8 @@ body{
       <section id="backpackSection" class="invSection">
         <div class="sectionHead">
           <div>
-            <div class="sectionTitle">🎒 Mochila</div>
-            <div class="sectionSubtitle">Seus itens carregados</div>
+            <div class="sectionTitle" id="backpackSectionTitle">🎒 Mochila Escolar 12 Slots</div>
+            <div class="sectionSubtitle"></div>
           </div>
           <button id="sortInventoryBtn">↕ Reordenar: nome</button>
         </div>
@@ -987,7 +1037,7 @@ body{
         <div id="doorName">Porta</div>
         <div id="doorDesc"></div>
         <div id="doorMeta" class="tagRow"><span class="tag doorTag">Passagem</span></div>
-        <div id="doorHint">Toque na porta para usar · toque fora para voltar</div>
+        <div id="doorHint"></div>
       </div>
     </div>
   </div>
@@ -1013,7 +1063,7 @@ const batteryHUD=document.getElementById('batteryHUD'),batteryFill=document.getE
 const lightActionBtn=document.getElementById('lightActionBtn');
 const activeSourceIcon=document.getElementById('activeSourceIcon'),activeSourceName=document.getElementById('activeSourceName'),activeSourceCharge=document.getElementById('activeSourceCharge'),changeSourceBtn=document.getElementById('changeSourceBtn'),lightSourceSelector=document.getElementById('lightSourceSelector'),sourceResourceStatus=document.getElementById('sourceResourceStatus');
 const batteryOverlay=document.getElementById('batteryOverlay'),batteryPanel=document.getElementById('batteryPanel'),batteryCloseBtn=document.getElementById('batteryCloseBtn'),removeBatteryBtn=document.getElementById('removeBatteryBtn'),spareBatteryList=document.getElementById('spareBatteryList'),batteryReloadStatus=document.getElementById('batteryReloadStatus'),batterySpareTitle=document.getElementById('batterySpareTitle'),batteryTestNote=document.getElementById('batteryTestNote');
-const backpackHUD=document.getElementById('backpackHUD'),inventoryOverlay=document.getElementById('inventoryOverlay'),inventoryPanel=document.getElementById('inventoryPanel'),inventoryCloseBtn=document.getElementById('inventoryCloseBtn'),containerSection=document.getElementById('containerSection'),containerSectionSubtitle=document.getElementById('containerSectionSubtitle'),containerGridUnified=document.getElementById('containerGridUnified'),inventoryGrid=document.getElementById('inventoryGrid'),sortInventoryBtn=document.getElementById('sortInventoryBtn'),detailPreview=document.getElementById('detailPreview'),detailPreviewEmoji=document.getElementById('detailPreviewEmoji'),detailName=document.getElementById('detailName'),detailDesc=document.getElementById('detailDesc'),detailMeta=document.getElementById('detailMeta'),detailOrigin=document.getElementById('detailOrigin'),detailActions=document.getElementById('detailActions'),liquidTransferTargets=document.getElementById('liquidTransferTargets'),destroyHint=document.getElementById('destroyHint');
+const backpackHUD=document.getElementById('backpackHUD'),inventoryOverlay=document.getElementById('inventoryOverlay'),inventoryPanel=document.getElementById('inventoryPanel'),inventoryCloseBtn=document.getElementById('inventoryCloseBtn'),containerSection=document.getElementById('containerSection'),containerSectionSubtitle=document.getElementById('containerSectionSubtitle'),containerSectionTitle=document.getElementById('containerSectionTitle'),backpackSectionTitle=document.getElementById('backpackSectionTitle'),containerGridUnified=document.getElementById('containerGridUnified'),inventoryGrid=document.getElementById('inventoryGrid'),sortInventoryBtn=document.getElementById('sortInventoryBtn'),detailPreview=document.getElementById('detailPreview'),detailPreviewEmoji=document.getElementById('detailPreviewEmoji'),detailName=document.getElementById('detailName'),detailDesc=document.getElementById('detailDesc'),detailMeta=document.getElementById('detailMeta'),detailOrigin=document.getElementById('detailOrigin'),detailActions=document.getElementById('detailActions'),liquidTransferTargets=document.getElementById('liquidTransferTargets'),destroyHint=document.getElementById('destroyHint');
 
 const lootReveal=document.getElementById('lootReveal'),lootFocus=document.getElementById('lootFocus'),lootEmoji=document.getElementById('lootEmoji'),lootQty=document.getElementById('lootQty'),lootName=document.getElementById('lootName'),lootDesc=document.getElementById('lootDesc'),lootMeta=document.getElementById('lootMeta');
 const doorReveal=document.getElementById('doorReveal'),doorFocus=document.getElementById('doorFocus'),doorName=document.getElementById('doorName'),doorDesc=document.getElementById('doorDesc');
@@ -1031,6 +1081,7 @@ const CONSUME_HOLD_MS=1300;
 const LOCAL_SAVE_KEY='tama_game_local_save_v1';let lastLocalBatterySave=0,lastSurvivalTick=performance.now(),lastSurvivalSave=0;
 const survival={health:100,hunger:72,thirst:60,fatigue:78};
 const worldTime={day:1,minute:8*60};
+const BACKPACK_INFO={name:'Mochila Escolar',slots:12};
 let prototype019Injected=false;
 const LIGHT_SOURCES={
   flashlight:{
@@ -1129,10 +1180,10 @@ const inventory={
 };
 function effectTagsHTML(effects){
   if(!effects)return'';
-  const labels={health:'Vida',hunger:'Fome',thirst:'Sede',fatigue:'Cansaço'};
+  const icons={health:'❤️',hunger:'🍖',thirst:'💧',fatigue:'😴'};
   return Object.entries(effects).filter(([,v])=>v!==0).map(([k,v])=>{
-    const cls=v>0?'effectPositive':'effectNegative';
-    return `<span class="tag ${cls}">${labels[k]} ${v>0?'+':''}${v}</span>`;
+    const cls=v>0?'effectPositiveMini':'effectNegativeMini';
+    return `<span class="effectStat ${cls}" title="${k}"><span class="effectEmoji">${icons[k]||'•'}</span><span>${v>0?'+':''}${v}</span></span>`;
   }).join('');
 }
 function liquidName(item){
@@ -1154,15 +1205,44 @@ function tagHTML(item){
   if(item.id==='battery'){
     const c=Math.max(0,Math.min(100,Math.round(item.charge??0)));
     const cls=c>60?'chargeHigh':c>25?'chargeMid':c>0?'chargeLow':'chargeDead';
-    return `<span class="tag energy">Energia</span><span class="tag ${cls}">Carga ${c}%</span>`;
+    return `<span class="metaBlock"><span class="metaCore"><span class="tag energy">Energia</span><span class="tag ${cls}">Carga ${c}%</span></span></span>`;
   }
   if(item.id==='water_bottle'){
     const fill=Math.max(0,Math.min(100,Math.round(item.fill??0)));
-    const liquid=fill>0?liquidName(item):'Vazia';
-    return `<span class="tag container">Recipiente</span><span class="tag water">${liquid} · ${fill}%</span>`;
+    const liquid=fill>0?liquidName(item):'Vazio';
+    return `<span class="metaBlock"><span class="metaCore"><span class="tag container">Recipiente</span><span class="tag water">${liquid} · ${fill}%</span></span></span>`;
   }
   const d=ITEMS[item.id];
-  return `<span class="tag ${item.category}">${CAT_LABEL[item.category]}</span><span class="tag ${item.condition}">${COND_LABEL[item.condition]}</span>${effectTagsHTML(d.effects)}`;
+  const effects=effectTagsHTML(d.effects);
+  return `<span class="metaBlock"><span class="metaCore"><span class="tag ${item.category}">${CAT_LABEL[item.category]}</span><span class="tag ${item.condition}">${COND_LABEL[item.condition]}</span></span>${effects?`<span class="effectRow">${effects}</span>`:''}</span>`;
+}
+function slotToneClass(it){
+  if(!it)return'';
+  if(it.id==='battery'){
+    const c=Math.max(0,Math.min(100,Math.round(it.charge??0)));
+    return c<=0?'tone-dead':c<=25?'tone-low':c<=60?'tone-mid':'tone-good';
+  }
+  return ({good:'tone-good',regular:'tone-regular',spoiling:'tone-spoiling',spoiled:'tone-spoiled'})[it.condition]||'';
+}
+function displayContainerName(rawId){
+  if(!rawId)return'Container';
+  const legacy={fridge:'Geladeira',trash:'Lixeira',cab:'Armário',microwave:'Micro-ondas',alimento:'Alimento',itens:'Itens'};
+  let base=String(rawId).replace(/_[a-z]_[0-9]+$/i,'').trim();
+  const simple=base.toLowerCase();
+  if(legacy[simple])return legacy[simple];
+  const lowWords=new Set(['de','da','do','das','dos','e']);
+  const accents={armario:'Armário',saida:'Saída',agua:'Água',microondas:'Micro-ondas',geladeira:'Geladeira',lixeira:'Lixeira',alimentos:'Alimentos',cozinha:'Cozinha'};
+  return base.replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim().split(' ').filter(Boolean).map((w,i)=>{
+    const lw=w.toLowerCase();
+    if(accents[lw])return accents[lw];
+    if(i>0&&lowWords.has(lw))return lw;
+    return lw.charAt(0).toUpperCase()+lw.slice(1);
+  }).join(' ')||'Container';
+}
+function updateInventoryTitles(){
+  if(backpackSectionTitle)backpackSectionTitle.textContent=`🎒 ${BACKPACK_INFO.name} ${BACKPACK_INFO.slots} Slots`;
+  if(containerSectionTitle)containerSectionTitle.textContent=uiMode==='container'&&openContainerId?displayContainerName(openContainerId):'Container';
+  if(containerSectionSubtitle)containerSectionSubtitle.textContent='';
 }
 function flashlightPower(){
   const src=currentLightSource();
@@ -1497,7 +1577,7 @@ function compatibleBottleEntries(sourceKey){
     return (target.fill??0)<=0||!target.fluidType||target.fluidType===source.fluidType;
   });
 }
-function showLiquidTargets(sourceKey){const source=inventory[sourceKey];if(!source||source.id!=='water_bottle'||(source.fill??0)<=0)return;const targets=compatibleBottleEntries(sourceKey);if(!targets.length){survivalMessage('Nenhum outro copo compatível com espaço livre.');return}transferModeSourceKey=sourceKey;liquidTransferTargets.classList.remove('open');liquidTransferTargets.innerHTML='';detailOrigin.textContent='Transferência: toque em um copo destacado.';renderUnifiedGrids()}
+function showLiquidTargets(sourceKey){const source=inventory[sourceKey];if(!source||source.id!=='water_bottle'||(source.fill??0)<=0)return;const targets=compatibleBottleEntries(sourceKey);if(!targets.length){survivalMessage('Nenhum outro copo compatível com espaço livre.');return}transferModeSourceKey=sourceKey;liquidTransferTargets.classList.remove('open');liquidTransferTargets.innerHTML='';detailOrigin.textContent='';renderUnifiedGrids()}
 function detachEmptyCupForFill(targetKey){
   const target=inventory[targetKey];
   if(!target||target.id!=='water_bottle'||(target.fill??0)>0)return targetKey;
@@ -1622,11 +1702,49 @@ function startConsumeHold(e){
   consumeTimer=setTimeout(finishConsumeHold,CONSUME_HOLD_MS);
 }
 
-function renderUnifiedGrids(){const entries=sortedInventoryEntries();inventoryGrid.innerHTML='';const transferTargets=transferModeSourceKey?new Set(compatibleBottleEntries(transferModeSourceKey).map(([k])=>k)):new Set(),invTotal=Math.max(12,entries.length);for(let i=0;i<invTotal;i++){const slot=document.createElement('div');slot.className='invSlot';const entry=entries[i];if(!entry){slot.classList.add('empty');inventoryGrid.appendChild(slot);continue}const [key,it]=entry;slot.dataset.source='inventory';slot.dataset.key=key;slot.innerHTML=itemIconHTML(it);if(transferModeSourceKey===key)slot.classList.add('transfer-source');if(transferTargets.has(key))slot.classList.add('transfer-target');slot.onclick=e=>{e.stopPropagation();if(transferModeSourceKey){if(transferTargets.has(key))startLiquidTransfer(transferModeSourceKey,key);else if(key===transferModeSourceKey)cancelLiquidTransferMode();return}selectUnifiedItem('inventory',key)};slot.ondblclick=e=>{e.stopPropagation();if(transferModeSourceKey)return;selectUnifiedItem('inventory',key);if(uiMode==='container'&&openContainerId)transferInventoryToContainer(key)};inventoryGrid.appendChild(slot)}containerGridUnified.innerHTML='';if(uiMode==='container'&&openContainerId){const items=containerState[openContainerId]?.remaining||[],total=Math.max(12,items.length);for(let i=0;i<total;i++){const slot=document.createElement('div');slot.className='invSlot',it=items[i];if(!it){slot.classList.add('empty');containerGridUnified.appendChild(slot);continue}slot.dataset.source='container';slot.dataset.key=String(i);slot.innerHTML=itemIconHTML(it);slot.onclick=e=>{e.stopPropagation();if(!transferModeSourceKey)selectUnifiedItem('container',String(i))};slot.ondblclick=e=>{e.stopPropagation();if(transferModeSourceKey)return;selectUnifiedItem('container',String(i));transferContainerToInventory(i)};containerGridUnified.appendChild(slot)}containerSectionSubtitle.textContent=items.length?`${items.length} tipo(s) de item aqui`:'Vazio — você pode guardar coisas aqui'}[...inventoryGrid.querySelectorAll('.invSlot'),...containerGridUnified.querySelectorAll('.invSlot')].forEach(slot=>slot.classList.toggle('selected',slot.dataset.source===selectedSource&&slot.dataset.key===String(selectedKey)))}
+function renderUnifiedGrids(){
+  const entries=sortedInventoryEntries();updateInventoryTitles();inventoryGrid.innerHTML='';
+  const transferTargets=transferModeSourceKey?new Set(compatibleBottleEntries(transferModeSourceKey).map(([k])=>k)):new Set();
+  const invTotal=Math.max(BACKPACK_INFO.slots,entries.length);
+  for(let i=0;i<invTotal;i++){
+    const slot=document.createElement('div');slot.className='invSlot';const entry=entries[i];
+    if(!entry){slot.classList.add('empty');inventoryGrid.appendChild(slot);continue}
+    const [key,it]=entry;slot.dataset.source='inventory';slot.dataset.key=key;slot.innerHTML=itemIconHTML(it);const tone=slotToneClass(it);if(tone)slot.classList.add(tone);
+    if(transferModeSourceKey===key)slot.classList.add('transfer-source');if(transferTargets.has(key))slot.classList.add('transfer-target');
+    slot.onclick=e=>{e.stopPropagation();if(transferModeSourceKey){if(transferTargets.has(key))startLiquidTransfer(transferModeSourceKey,key);else if(key===transferModeSourceKey)cancelLiquidTransferMode();return}selectUnifiedItem('inventory',key)};
+    slot.ondblclick=e=>{e.preventDefault();e.stopPropagation();if(transferModeSourceKey)return;selectUnifiedItem('inventory',key);if(uiMode==='container'&&openContainerId)transferInventoryToContainer(key)};
+    inventoryGrid.appendChild(slot);
+  }
+  containerGridUnified.innerHTML='';
+  if(uiMode==='container'&&openContainerId){
+    const items=containerState[openContainerId]?.remaining||[],total=Math.max(12,items.length);
+    for(let i=0;i<total;i++){
+      const slot=document.createElement('div');slot.className='invSlot';const it=items[i];
+      if(!it){slot.classList.add('empty');containerGridUnified.appendChild(slot);continue}
+      slot.dataset.source='container';slot.dataset.key=String(i);slot.innerHTML=itemIconHTML(it);const tone=slotToneClass(it);if(tone)slot.classList.add(tone);
+      slot.onclick=e=>{e.stopPropagation();if(!transferModeSourceKey)selectUnifiedItem('container',String(i))};
+      slot.ondblclick=e=>{e.preventDefault();e.stopPropagation();if(transferModeSourceKey)return;selectUnifiedItem('container',String(i));transferContainerToInventory(i)};
+      containerGridUnified.appendChild(slot);
+    }
+    containerSectionSubtitle.textContent='';
+  }
+  [...inventoryGrid.querySelectorAll('.invSlot'),...containerGridUnified.querySelectorAll('.invSlot')].forEach(slot=>slot.classList.toggle('selected',slot.dataset.source===selectedSource&&slot.dataset.key===String(selectedKey)));
+}
 function selectUnifiedItem(source,key){cancelDestroy();cancelConsumeHold();if(transferModeSourceKey)cancelLiquidTransferMode();selectedSource=source;selectedKey=key;renderUnifiedGrids();renderDetail()}
-function renderDetail(){const item=selectedItem();cancelConsumeHold();detailPreview.classList.remove('consume-ready');liquidTransferTargets.classList.remove('open');liquidTransferTargets.innerHTML='';if(!item){detailPreviewEmoji.innerHTML='🎒';detailName.textContent='Nenhum item selecionado';detailDesc.textContent='Selecione um item da mochila ou do container.';detailMeta.innerHTML='';detailOrigin.textContent='';detailActions.innerHTML='';destroyHint.textContent='';return}const d=ITEMS[item.id],dead=item.id==='battery'&&(item.charge??0)<=0?'<div class="previewDeadX">✖</div>':'';detailPreviewEmoji.innerHTML=`${d.emoji}${dead}`;detailName.textContent=d.name;detailDesc.textContent=itemDescription(item);detailMeta.innerHTML=tagHTML(item);const consumable=selectedSource==='inventory'&&isConsumableItem(item);detailPreview.classList.toggle('consume-ready',consumable);if(transferModeSourceKey)detailOrigin.textContent='Transferência: toque em um copo destacado.';else detailOrigin.textContent=selectedSource==='container'?'No container':(consumable?'Na mochila · segure a imagem para consumir':'Na mochila');let html='';if(selectedSource==='container')html+=`<button id="transferActionBtn" class="detailBtn primary">Pegar</button>`;else if(uiMode==='container'&&openContainerId)html+=`<button id="transferActionBtn" class="detailBtn primary">Guardar no container</button>`;if(selectedSource==='inventory'){if(item.id==='water_bottle'&&(item.fill??0)>0)html+=`<button id="liquidTransferBtn" class="detailBtn primary">Transferir líquido</button>`;html+=`<button id="destroyActionBtn" class="detailBtn danger">Destruir</button>`}detailActions.innerHTML=html;destroyHint.textContent=selectedSource==='inventory'?'Segure “Destruir” para confirmar.':'';const transferBtn=document.getElementById('transferActionBtn');if(transferBtn)transferBtn.onclick=e=>{e.stopPropagation();selectedSource==='container'?transferContainerToInventory(Number(selectedKey)):transferInventoryToContainer(selectedKey)};const liquidBtn=document.getElementById('liquidTransferBtn');if(liquidBtn)liquidBtn.onclick=e=>{e.stopPropagation();showLiquidTargets(selectedKey)};const destroyBtn=document.getElementById('destroyActionBtn');if(destroyBtn){destroyBtn.onpointerdown=e=>{e.preventDefault();e.stopPropagation();startDestroyHold(destroyBtn)};destroyBtn.onpointerup=e=>{e.preventDefault();e.stopPropagation();cancelDestroy()};destroyBtn.onpointerleave=e=>{if(destroyHolding)cancelDestroy()};destroyBtn.onpointercancel=e=>cancelDestroy();destroyBtn.oncontextmenu=e=>e.preventDefault()}}
-function openUnifiedInventory(mode='backpack',containerId=null){cancelDestroy();cancelLiquidTransferMode();uiMode=mode;openContainerId=mode==='container'?containerId:null;if(mode==='container'&&openContainerId&&!containerState[openContainerId])containerState[openContainerId]={searched:true,remaining:[]};selectedSource=null;selectedKey=null;batteryOverlay.classList.remove('open');inventoryPanel.classList.toggle('backpackOnly',mode!=='container');inventoryOverlay.classList.add('open');inventoryOverlay.style.display='flex';inventoryOverlay.style.pointerEvents='auto';stage.classList.add('inventory-open');renderUnifiedGrids();renderDetail()}
-function closeUnifiedInventory(){cancelDestroy();cancelConsumeHold();cancelLiquidTransferMode();inventoryOverlay.classList.remove('open');inventoryOverlay.style.display='none';stage.classList.remove('inventory-open');if(openContainerId)updateState(openContainerId);openContainerId=null;selectedSource=null;selectedKey=null;uiMode='backpack';saveAfterAction()}
+function renderDetail(){
+  const item=selectedItem();cancelConsumeHold();detailPreview.classList.remove('consume-ready');liquidTransferTargets.classList.remove('open');liquidTransferTargets.innerHTML='';detailOrigin.textContent='';destroyHint.textContent='';
+  if(!item){detailPreviewEmoji.innerHTML='🎒';detailName.textContent='';detailDesc.textContent='';detailMeta.innerHTML='';detailActions.innerHTML='';return}
+  const d=ITEMS[item.id],dead=item.id==='battery'&&(item.charge??0)<=0?'<div class="previewDeadX">✖</div>':'';detailPreviewEmoji.innerHTML=`${d.emoji}${dead}`;detailName.textContent=d.name;detailDesc.textContent=itemDescription(item);detailMeta.innerHTML=tagHTML(item);
+  const consumable=selectedSource==='inventory'&&isConsumableItem(item);detailPreview.classList.toggle('consume-ready',consumable);let html='';
+  if(selectedSource==='container')html+=`<button id="transferActionBtn" class="detailBtn primary">Pegar</button>`;else if(uiMode==='container'&&openContainerId)html+=`<button id="transferActionBtn" class="detailBtn primary">Guardar</button>`;
+  if(selectedSource==='inventory'){if(item.id==='water_bottle'&&(item.fill??0)>0)html+=`<button id="liquidTransferBtn" class="detailBtn primary">Transferir líquido</button>`;html+=`<button id="destroyActionBtn" class="detailBtn danger">Destruir</button>`}
+  detailActions.innerHTML=html;
+  const transferBtn=document.getElementById('transferActionBtn');if(transferBtn)transferBtn.onclick=e=>{e.stopPropagation();selectedSource==='container'?transferContainerToInventory(Number(selectedKey)):transferInventoryToContainer(selectedKey)};
+  const liquidBtn=document.getElementById('liquidTransferBtn');if(liquidBtn)liquidBtn.onclick=e=>{e.stopPropagation();showLiquidTargets(selectedKey)};
+  const destroyBtn=document.getElementById('destroyActionBtn');if(destroyBtn){destroyBtn.onpointerdown=e=>{e.preventDefault();e.stopPropagation();startDestroyHold(destroyBtn)};destroyBtn.onpointerup=e=>{e.preventDefault();e.stopPropagation();cancelDestroy()};destroyBtn.onpointerleave=e=>{if(destroyHolding)cancelDestroy()};destroyBtn.onpointercancel=e=>cancelDestroy();destroyBtn.oncontextmenu=e=>e.preventDefault()}
+}
+function openUnifiedInventory(mode='backpack',containerId=null){cancelDestroy();cancelLiquidTransferMode();uiMode=mode;openContainerId=mode==='container'?containerId:null;if(mode==='container'&&openContainerId&&!containerState[openContainerId])containerState[openContainerId]={searched:true,remaining:[]};selectedSource=null;selectedKey=null;batteryOverlay.classList.remove('open');stage.classList.remove('battery-open');inventoryPanel.classList.toggle('backpackOnly',mode!=='container');inventoryOverlay.classList.add('open');inventoryOverlay.style.display='flex';inventoryOverlay.style.pointerEvents='auto';stage.classList.add('inventory-open');updateInventoryTitles();renderUnifiedGrids();renderDetail();syncFloatingHud()}
+function closeUnifiedInventory(){cancelDestroy();cancelConsumeHold();cancelLiquidTransferMode();inventoryOverlay.classList.remove('open');inventoryOverlay.style.display='none';stage.classList.remove('inventory-open');if(openContainerId)updateState(openContainerId);openContainerId=null;selectedSource=null;selectedKey=null;uiMode='backpack';updateInventoryTitles();syncFloatingHud();saveAfterAction()}
 function transferContainerToInventory(index){
   if(!openContainerId)return;
   const st=containerState[openContainerId],it=st?.remaining?.[index];if(!it)return;
@@ -1742,6 +1860,7 @@ function setActiveLightSource(sourceId){
   redraw();
 }
 
+function syncFloatingHud(){const hideBackpack=inventoryOverlay.classList.contains('open')||batteryOverlay.classList.contains('open');backpackHUD.style.display=hideBackpack?'none':'flex'}
 function updateBatteryHUD(){
   const src=currentLightSource();
   const c=currentLightPercent();
@@ -1883,13 +2002,13 @@ doorReveal.addEventListener('contextmenu',e=>e.preventDefault());
 interactButton.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();performModularInteraction()});
 detailPreview.addEventListener('pointerdown',startConsumeHold);
 detailPreview.addEventListener('contextmenu',e=>{if(detailPreview.classList.contains('consume-ready'))e.preventDefault()});
-batteryHUD.addEventListener('click',e=>{e.stopPropagation();renderBatteryPanel();batteryOverlay.classList.toggle('open')});
+batteryHUD.addEventListener('click',e=>{e.stopPropagation();renderBatteryPanel();batteryOverlay.classList.toggle('open');stage.classList.toggle('battery-open',batteryOverlay.classList.contains('open'));syncFloatingHud()});
 lightActionBtn.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();performLightAction()});
 changeSourceBtn.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();renderSourceSelector();lightSourceSelector.classList.toggle('open')});
 lightSourceSelector.addEventListener('pointerdown',e=>e.stopPropagation());
 batteryPanel.addEventListener('pointerdown',e=>e.stopPropagation());
-batteryOverlay.addEventListener('pointerdown',e=>{if(e.target===batteryOverlay){lightSourceSelector.classList.remove('open');batteryOverlay.classList.remove('open')}});
-batteryCloseBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();lightSourceSelector.classList.remove('open');batteryOverlay.classList.remove('open')});
+batteryOverlay.addEventListener('pointerdown',e=>{if(e.target===batteryOverlay){lightSourceSelector.classList.remove('open');batteryOverlay.classList.remove('open');stage.classList.remove('battery-open');syncFloatingHud()}});
+batteryCloseBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();lightSourceSelector.classList.remove('open');batteryOverlay.classList.remove('open');stage.classList.remove('battery-open');syncFloatingHud()});
 removeBatteryBtn.addEventListener('click',e=>{e.stopPropagation();removeInstalledBattery()});
 loadLocalGame();
 ensurePrototype019Items();
@@ -1899,7 +2018,7 @@ updateSurvivalHUD();
 saveLocalGame();
 setInterval(batteryTick,100);
 setInterval(survivalTick,1000);
-renderBatteryPanel();updateBatteryHUD();updateLightControls();renderSourceSelector();updateInteractButton();
+renderBatteryPanel();updateBatteryHUD();updateLightControls();renderSourceSelector();updateInteractButton();updateInventoryTitles();syncFloatingHud();
 
 
 
