@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TAMA GAME — 0.19.8 — Capacidades / Interação</title>
+<title>TAMA GAME — 0.19.9 — Metadados / Água / UI</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}body{display:grid;place-items:center;font-family:Arial,sans-serif}#stage{position:relative;width:min(100vw,calc(100vh*16/9));aspect-ratio:16/9;overflow:hidden;background:#000}#scene,#darkness,#hotspots,#sceneFade{position:absolute;inset:0;width:100%;height:100%}#scene{object-fit:fill;pointer-events:none}#darkness{pointer-events:none}#hotspots{overflow:visible}#hotspots>svg{width:100%;height:100%;display:block;overflow:visible}#sceneFade{z-index:95;background:#000;opacity:0;pointer-events:none;transition:opacity .18s ease}#sceneFade.on{opacity:1}
 #hotspots .hotspot{fill:rgba(0,0,0,.001)!important;stroke:transparent!important;stroke-width:2px!important;pointer-events:all;cursor:pointer;transition:stroke .08s linear,filter .08s linear,fill .08s linear;vector-effect:non-scaling-stroke}#hotspots .hotspot.found{fill:rgba(0,190,255,.10)!important;stroke:#27c8ff!important;filter:drop-shadow(0 0 2px rgba(39,200,255,.95)) drop-shadow(0 0 5px rgba(39,200,255,.55))}#hotspots .hotspot.clicked{fill:rgba(122,255,154,.12)!important;stroke:#7aff9a!important;filter:drop-shadow(0 0 2px rgba(122,255,154,.95)) drop-shadow(0 0 6px rgba(122,255,154,.55))}#hotspots .hotspot.searched{fill:rgba(130,138,145,.09)!important;stroke:rgba(165,173,180,.70)!important;filter:drop-shadow(0 0 2px rgba(170,178,185,.45)) drop-shadow(0 0 5px rgba(170,178,185,.22))}#hotspots .hotspot.searched.found{fill:rgba(130,138,145,.12)!important;stroke:rgba(180,187,193,.78)!important}#hotspots .hotspot.searched-has-items{fill:rgba(150,158,165,.15)!important;stroke:rgba(200,207,213,.86)!important;filter:drop-shadow(0 0 2px rgba(205,212,218,.55)) drop-shadow(0 0 6px rgba(205,212,218,.27))}#hotspots .hotspot.searched-empty{fill:rgba(95,100,105,.06)!important;stroke:rgba(125,132,138,.45)!important;filter:none}#hotspots .ignore-frame{fill:none!important;stroke:none!important;pointer-events:none!important}#hotspots .str0,#hotspots .str1{stroke:inherit}#hotspots .fil0{fill:inherit}
@@ -961,6 +961,33 @@ body{
   #detailActions .mainUseAction{min-height:48px!important;font-size:13px!important}
 }
 
+
+/* === TAMA 0.19.9 — METADADOS COMPACTOS / ÁGUA === */
+.compactMeta{gap:0}
+.compactMeta .metaCore{gap:7px;justify-content:center}
+#detailMeta:empty{display:none}
+.tag.cleanWater{background:#2f8d4b;color:#fff}
+.tag.dirtyWater{background:#a43c42;color:#fff}
+.tag.waterEmpty{background:#565e65;color:#e5e8ea}
+.slotLiquid.cleanWater{background:#2f984f}
+.slotLiquid.dirtyWater{background:#b13d44}
+.slotLiquid.emptyWater{background:#555d64}
+.invSlot.tone-good{background:rgba(50,132,72,.30)}
+.invSlot.tone-regular{background:rgba(160,126,39,.29)}
+.invSlot.tone-spoiling{background:rgba(184,91,38,.30)}
+.invSlot.tone-spoiled{background:rgba(157,47,54,.32)}
+.invSlot.tone-mid{background:rgba(160,126,39,.29)}
+.invSlot.tone-low{background:rgba(176,55,55,.31)}
+.invSlot.tone-dead{background:rgba(87,92,98,.27)}
+@media (orientation:landscape) and (max-height:500px){
+  #detailMeta{margin-top:7px}
+  #detailActions{margin-top:10px;gap:7px}
+  .metaCore{gap:6px}
+  .effectStat{min-height:21px;padding:3px 7px;font-size:11px}
+  .effectEmoji{font-size:12px}
+  .detailBtn.mainUseAction{min-height:42px}
+}
+
 </style>
 </head><body>
 <div id="ambientBackdrop"></div>
@@ -1211,7 +1238,7 @@ const sceneStates={kitchen:{},storage:{}};let containerState=sceneStates.kitchen
 const CAT_LABEL={food:'Comida',medical:'Médico',material:'Material',energy:'Energia',container:'Recipiente'},COND_LABEL={good:'Condição boa',regular:'Condição regular',spoiling:'Estragando',spoiled:'Estragado'};
 const ITEMS={
   canned_food:{emoji:'🥫',name:'Comida enlatada',description:'Uma refeição enlatada. Mata bem a fome, mas é um pouco salgada.',category:'food',conditions:['good','regular'],useAction:'Comer',effects:{hunger:28,thirst:-4}},
-  canned_soup:{emoji:'🍲',name:'Sopa enlatada',description:'Sopa pronta para consumo. Alimenta e ainda ajuda um pouco na hidratação.',category:'food',conditions:['good','regular','spoiling'],useAction:'Comer',effects:{hunger:24,thirst:12}},
+  canned_soup:{emoji:'🍲',name:'Sopa',description:'Sopa pronta para consumo. Alimenta e ainda ajuda um pouco na hidratação.',category:'food',conditions:['good','regular','spoiling'],useAction:'Comer',effects:{hunger:24,thirst:12}},
   chocolate:{emoji:'🍫',name:'Barra de chocolate',description:'Energia rápida e bastante açúcar. Ajuda na fome, mas dá sede.',category:'food',conditions:['good','regular'],useAction:'Comer',effects:{hunger:16,thirst:-8,fatigue:4}},
   crackers:{emoji:'🍪',name:'Biscoito seco',description:'Velho, seco e salgado. Enche o estômago, mas pede água logo depois.',category:'food',conditions:['good','regular','spoiling'],useAction:'Comer',effects:{hunger:18,thirst:-10}},
   salty_snack:{emoji:'🥨',name:'Salgadinho salgado',description:'Crocante, salgado e péssimo para quem já está com sede.',category:'food',conditions:['good','regular','spoiling'],useAction:'Comer',effects:{hunger:14,thirst:-14}},
@@ -1251,16 +1278,18 @@ function tagHTML(item){
   if(item.id==='battery'){
     const c=Math.max(0,Math.min(100,Math.round(item.charge??0)));
     const cls=c>60?'chargeHigh':c>25?'chargeMid':c>0?'chargeLow':'chargeDead';
-    return `<span class="metaBlock"><span class="metaCore"><span class="tag energy">Energia</span><span class="tag ${cls}">Carga ${c}%</span></span></span>`;
+    return `<span class="metaBlock compactMeta"><span class="metaCore"><span class="tag ${cls}">Carga ${c}%</span></span></span>`;
   }
   if(item.id==='water_bottle'){
     const fill=Math.max(0,Math.min(100,Math.round(item.fill??0)));
-    const state=fill<=0?'Vazio':((item.fluidType||'clean_water')==='dirty_water'?'Água suja':'Água limpa')+` · ${fill}%`;
-    return `<span class="metaBlock"><span class="metaCore"><span class="tag container">Recipiente</span><span class="tag water">${state}</span></span></span>`;
+    if(fill<=0)return `<span class="metaBlock compactMeta"><span class="metaCore"><span class="tag waterEmpty">Vazio</span></span></span>`;
+    const dirty=(item.fluidType||'clean_water')==='dirty_water';
+    return `<span class="metaBlock compactMeta"><span class="metaCore"><span class="tag ${dirty?'dirtyWater':'cleanWater'}">${dirty?'Água suja':'Água limpa'} · ${fill}%</span></span></span>`;
   }
   const d=ITEMS[item.id],effects=effectTagsHTML(d.effects);
   const condition=item.category==='food'&&item.condition?`<span class="tag ${item.condition}">${COND_LABEL[item.condition]||item.condition}</span>`:'';
-  return `<span class="metaBlock"><span class="metaCore"><span class="tag ${item.category}">${CAT_LABEL[item.category]}</span>${condition}</span>${effects?`<span class="effectRow">${effects}</span>`:''}</span>`;
+  if(!condition&&!effects)return'';
+  return `<span class="metaBlock compactMeta"><span class="metaCore">${condition}${effects}</span></span>`;
 }
 function slotToneClass(it){
   if(!it)return'';
@@ -1558,7 +1587,7 @@ function chargeClass(c){
   if(c<=60)return'chargeMid';
   return'chargeHigh';
 }
-function itemIconHTML(it){const d=ITEMS[it.id];if(it.id==='battery'){const c=Math.max(0,Math.min(100,Math.round(it.charge??0))),dead=c<=0?'<div class="deadX">✖</div>':'',qty=c<=0&&(it.qty??1)>1?`<div class="slotQtyUnified">x${it.qty}</div>`:'';return `<div class="slotCenterUnified">${d.emoji}${dead}</div><div class="slotCharge ${chargeClass(c)}">${c}%</div>${qty}`}if(it.id==='water_bottle'){const fill=Math.max(0,Math.min(100,Math.round(it.fill??0))),qty=fill<=0&&(it.qty??1)>1?`<div class="slotQtyUnified">x${it.qty}</div>`:'';return `<div class="slotCenterUnified">${d.emoji}</div><div class="slotLiquid">${fill}%</div>${qty}`}return `<div class="slotCenterUnified">${d.emoji}</div>${it.qty>1?`<div class="slotQtyUnified">x${it.qty}</div>`:''}`}
+function itemIconHTML(it){const d=ITEMS[it.id];if(it.id==='battery'){const c=Math.max(0,Math.min(100,Math.round(it.charge??0))),dead=c<=0?'<div class="deadX">✖</div>':'',qty=c<=0&&(it.qty??1)>1?`<div class="slotQtyUnified">x${it.qty}</div>`:'';return `<div class="slotCenterUnified">${d.emoji}${dead}</div><div class="slotCharge ${chargeClass(c)}">${c}%</div>${qty}`}if(it.id==='water_bottle'){const fill=Math.max(0,Math.min(100,Math.round(it.fill??0))),qty=fill<=0&&(it.qty??1)>1?`<div class="slotQtyUnified">x${it.qty}</div>`:'',quality=fill<=0?'emptyWater':((it.fluidType||'clean_water')==='dirty_water'?'dirtyWater':'cleanWater');return `<div class="slotCenterUnified">${d.emoji}</div><div class="slotLiquid ${quality}">${fill}%</div>${qty}`}return `<div class="slotCenterUnified">${d.emoji}</div>${it.qty>1?`<div class="slotQtyUnified">x${it.qty}</div>`:''}`}
 function conditionRank(it){
   if(it.id==='battery'){
     const c=Math.max(0,Math.min(100,Math.round(it.charge??0)));
